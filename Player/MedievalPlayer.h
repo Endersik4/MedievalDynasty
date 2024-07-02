@@ -49,6 +49,8 @@ private:
 	TObjectPtr<class USpringArmComponent> SpringArmComponent = nullptr;
 	UPROPERTY(EditDefaultsOnly, Category = "Components")
 	TObjectPtr<class UCameraComponent> CameraComponent = nullptr;
+	UPROPERTY(EditDefaultsOnly, Category = "Components")
+	TObjectPtr<class UInventoryComponent> InventoryComponent = nullptr;
 
 	UPROPERTY(EditAnywhere, Category = "Player Settings|Movement")
 	float MovementSpeed = 80000.f;
@@ -77,4 +79,6 @@ private:
 	FRotator TargetRotationToRotate = FRotator::ZeroRotator;
 	float GetCurrentYawMoveDirection();
 
+	UPROPERTY(Transient)
+	TObjectPtr<APlayerController> PlayerController = nullptr;
 };

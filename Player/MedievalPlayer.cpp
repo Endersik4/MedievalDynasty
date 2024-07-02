@@ -10,6 +10,8 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Net/UnrealNetwork.h"
 
+#include "Inventory/InventoryComponent.h"
+
 AMedievalPlayer::AMedievalPlayer()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -27,6 +29,8 @@ AMedievalPlayer::AMedievalPlayer()
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera Component"));
 	CameraComponent->SetupAttachment(SpringArmComponent);
 
+	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("Inventory Component"));
+
 	bReplicates = true;
 	SetReplicateMovement(true);
 }
@@ -35,6 +39,7 @@ void AMedievalPlayer::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 }
 
 void AMedievalPlayer::Tick(float DeltaTime)
@@ -53,6 +58,9 @@ void AMedievalPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 	PlayerInputComponent->BindAxis(FName(TEXT("LookRight")), this, &AMedievalPlayer::LookRight);
 	PlayerInputComponent->BindAxis(FName(TEXT("LookUp")), this, &AMedievalPlayer::LookUp);
+
+	PlayerInputComponent->BindAction<FSelectSubInteractionMenu>(FName(TEXT("OpenInventory")), IE_Pressed, InventoryComponent.Get(), &UInventoryComponent::OpenInteractionMenu, 0);
+	PlayerInputComponent->BindAction<FSelectSubInteractionMenu>(FName(TEXT("OpenSkills")), IE_Pressed, InventoryComponent.Get(), &UInventoryComponent::OpenInteractionMenu, 1);
 }
 
 void AMedievalPlayer::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -157,13 +165,13 @@ float AMedievalPlayer::GetCurrentYawMoveDirection()
 	const float ForwardVal = GetInputAxisValue(FName("Forward"));
 	const float RightVal = GetInputAxisValue(FName("Right"));
 
-	if (ForwardVal < 0 && RightVal < 0) // left bottom corner yaw
+	if (ForwardVal < 0 && RightVal < 0) // left bottom corner
 		return (SpringArmComponent->GetComponentRotation().Yaw - 180.f) + 45.f;
-	else if (ForwardVal < 0 && RightVal > 0) // right bottom corner yaw
+	else if (ForwardVal < 0 && RightVal > 0) // right bottom corner
 		return (SpringArmComponent->GetComponentRotation().Yaw - 180.f) - 45.f;
-	else if (ForwardVal > 0 && RightVal > 0) // left top corner yaw
+	else if (ForwardVal > 0 && RightVal > 0) // left top corner
 		return SpringArmComponent->GetComponentRotation().Yaw + 45.f;
-	else if (ForwardVal > 0 && RightVal < 0) // right top corer yaw
+	else if (ForwardVal > 0 && RightVal < 0) // right top corner
 		return SpringArmComponent->GetComponentRotation().Yaw - 45.f;
 	else if (ForwardVal < 0) // bottom
 		return SpringArmComponent->GetComponentRotation().Yaw - 180.f;

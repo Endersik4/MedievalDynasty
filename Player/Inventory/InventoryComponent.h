@@ -4,7 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "ItemData.h"
 #include "InventoryComponent.generated.h"
+
+USTRUCT(BlueprintType)
+struct FInitiallInventory
+{
+	GENERATED_USTRUCT_BODY();
+
+	UPROPERTY(EditAnywhere)
+	int32 ItemAmount = 0;
+	UPROPERTY(EditAnywhere)
+	FName ItemRowName = FName();
+};
 
 DECLARE_DELEGATE_OneParam(FSelectSubInteractionMenu, int32);
 
@@ -28,6 +40,13 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Interaction Menu")
 	TSubclassOf<class UInteractionMenuWidget> InteractionMenuWidgetClass = nullptr;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Inventory")
+	TObjectPtr<UDataTable> AllItemsDataTable = nullptr;
+	UPROPERTY(EditAnywhere, Category = "Inventory")
+	TArray<FInitiallInventory> Inventory;
+	//UPROPERTY(VisibleAnywhere, Category = "Inventory")
+	//TArray<FInventoryItem> Inventory;
+
 	UPROPERTY(Transient)
 	bool bIsInventoryOpen = false;
 
@@ -39,4 +58,6 @@ private:
 
 	// returns true if inventory was closed
 	bool CloseInventory();
+
+	//void FillInventoryWithInitiallItems();
 };

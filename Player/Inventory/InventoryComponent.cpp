@@ -18,7 +18,27 @@ void UInventoryComponent::BeginPlay()
 	Super::BeginPlay();
 
 	PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+
+	//FillInventoryWithInitiallItems();
 }
+/*
+void UInventoryComponent::FillInventoryWithInitiallItems()
+{
+	if (!IsValid(AllItemsDataTable))
+		return;
+
+	Inventory.Empty();
+
+	for (const FInitiallInventory& CurrentItem : InitiallInventory)
+	{
+		FBaseItemData* FoundItem = AllItemsDataTable->FindRow<FBaseItemData>(CurrentItem.ItemRowName, "");
+		if (!FoundItem)
+			continue;
+
+		FInventoryItem NewInventoryItem = FInventoryItem(CurrentItem.ItemAmount, *FoundItem);
+		Inventory.Add(NewInventoryItem);
+	}
+}*/
 
 void UInventoryComponent::OpenInteractionMenu(int32 SubMenuIDToInitiallyOpen)
 {

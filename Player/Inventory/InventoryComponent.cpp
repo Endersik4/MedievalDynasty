@@ -21,24 +21,6 @@ void UInventoryComponent::BeginPlay()
 
 	//FillInventoryWithInitiallItems();
 }
-/*
-void UInventoryComponent::FillInventoryWithInitiallItems()
-{
-	if (!IsValid(AllItemsDataTable))
-		return;
-
-	Inventory.Empty();
-
-	for (const FInitiallInventory& CurrentItem : InitiallInventory)
-	{
-		FBaseItemData* FoundItem = AllItemsDataTable->FindRow<FBaseItemData>(CurrentItem.ItemRowName, "");
-		if (!FoundItem)
-			continue;
-
-		FInventoryItem NewInventoryItem = FInventoryItem(CurrentItem.ItemAmount, *FoundItem);
-		Inventory.Add(NewInventoryItem);
-	}
-}*/
 
 void UInventoryComponent::OpenInteractionMenu(int32 SubMenuIDToInitiallyOpen)
 {
@@ -86,3 +68,27 @@ bool UInventoryComponent::CloseInventory()
 	bIsInventoryOpen = false;
 	return true;
 }
+
+FBaseItemData* UInventoryComponent::GetItemDataFromDataTable(const FName& RowName)
+{
+	return AllItemsDataTable->FindRow<FBaseItemData>(RowName, "");
+}
+
+/*
+void UInventoryComponent::FillInventoryWithInitiallItems()
+{
+	if (!IsValid(AllItemsDataTable))
+		return;
+
+	Inventory.Empty();
+
+	for (const FInitiallInventory& CurrentItem : InitiallInventory)
+	{
+		FBaseItemData* FoundItem = AllItemsDataTable->FindRow<FBaseItemData>(CurrentItem.ItemRowName, "");
+		if (!FoundItem)
+			continue;
+
+		FInventoryItem NewInventoryItem = FInventoryItem(CurrentItem.ItemAmount, *FoundItem);
+		Inventory.Add(NewInventoryItem);
+	}
+}*/

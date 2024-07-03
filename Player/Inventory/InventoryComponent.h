@@ -36,6 +36,9 @@ protected:
 public:	
 	void OpenInteractionMenu(int32 MenuIDToInitiallyOpen = 0);
 
+	FORCEINLINE const TArray<FInitiallInventory>& GetInventory() const { return Inventory; }
+	FBaseItemData* GetItemDataFromDataTable(const FName& RowName);
+
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Interaction Menu")
 	TSubclassOf<class UInteractionMenuWidget> InteractionMenuWidgetClass = nullptr;

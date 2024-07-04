@@ -15,6 +15,12 @@ UCLASS()
 class MEDIEVALDYNASTY_API USelectCategoryInventoryEntry : public UUserWidget, public IUserObjectListEntry
 {
 	GENERATED_BODY()
+
+
+public:
+
+	void ActivateCategoryEntry(bool bActivate);
+
 protected:
 	virtual void NativeOnInitialized() override;
 	virtual void NativeOnListItemObjectSet(UObject* ListItemObject) override;
@@ -26,6 +32,7 @@ protected:
 	void OnClicked_SortInventoryButton();
 
 private:
+
 	UPROPERTY(Transient)
 	TObjectPtr<class USelectCategoryEntryObject> SelectCategoryEntryObject = nullptr;
 };

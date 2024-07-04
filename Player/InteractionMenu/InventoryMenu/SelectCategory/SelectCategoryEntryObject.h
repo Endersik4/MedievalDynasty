@@ -17,6 +17,8 @@ class MEDIEVALDYNASTY_API USelectCategoryEntryObject : public UObject
 	
 public:
 	UPROPERTY(EditAnywhere)
+	bool bInitallCategory = false;
+	UPROPERTY(EditAnywhere)
 	FCategoryInventory CategoryToDivideItems;
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UInventoryMenuWidget> InventoryMenuWidget = nullptr;

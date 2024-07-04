@@ -24,6 +24,9 @@ void USelectCategoryInventoryEntry::NativeOnListItemObjectSet(UObject* ListItemO
 		return;
 
 	SelectCategoryButton->SetStyle(SelectCategoryEntryObject->CategoryToDivideItems.SelectCategoryButtonStyle);
+
+	if (SelectCategoryEntryObject->bInitallCategory)
+		OnClicked_SortInventoryButton();
 }
 
 void USelectCategoryInventoryEntry::OnClicked_SortInventoryButton()
@@ -31,6 +34,26 @@ void USelectCategoryInventoryEntry::OnClicked_SortInventoryButton()
 	if (!IsValid(SelectCategoryEntryObject))
 		return;
 
+	SelectCategoryEntryObject->InventoryMenuWidget->UpdateCategoryDisplayText(SelectCategoryEntryObject->CategoryToDivideItems.CategoryDisplayText);
 	SelectCategoryEntryObject->InventoryMenuWidget->UpdateInventory(SelectCategoryEntryObject->CategoryToDivideItems.bDivideItemsUsingCategory, SelectCategoryEntryObject->CategoryToDivideItems.CategoryType);
+	SelectCategoryEntryObject->InventoryMenuWidget->UpdateCategory(this);
 
+	ActivateCategoryEntry(true);
+}
+
+void USelectCategoryInventoryEntry::ActivateCategoryEntry(bool bActivate)
+{
+	SelectCategoryButton->SetVisibility(bActivate ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Visible);
+
+	if (!IsValid(SelectCategoryEntryObject))
+		return;
+
+	if (bActivate)
+	{
+		SelectCategoryButton->SetStyle(SelectCategoryEntryObject->CategoryToDivideItems.CategorySelectedButtonStyle);
+	}
+	else
+	{
+		SelectCategoryButton->SetStyle(SelectCategoryEntryObject->CategoryToDivideItems.SelectCategoryButtonStyle);
+	}
 }

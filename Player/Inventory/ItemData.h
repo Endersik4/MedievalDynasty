@@ -15,6 +15,7 @@ enum EItemType
 	EIT_Crafts UMETA(DisplayName = "Crafts"),
 	EIT_Miscellaneous UMETA(DisplayName = "Miscellaneous"),
 	EIT_Campign UMETA(DisplayName = "Campign"),
+	EIT_None UMETA(DisplayName = "None"),
 };
 
 USTRUCT(BlueprintType)

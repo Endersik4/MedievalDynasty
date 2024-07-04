@@ -18,11 +18,17 @@ struct FCategoryInventory
 	TEnumAsByte<EItemType> CategoryType = EIT_Miscellaneous;
 	UPROPERTY(EditAnywhere)
 	FButtonStyle SelectCategoryButtonStyle = FButtonStyle();
+	UPROPERTY(EditAnywhere)
+	FButtonStyle CategorySelectedButtonStyle = FButtonStyle();
+	UPROPERTY(EditAnywhere)
+	FText CategoryDisplayText = FText();
 
 	FCategoryInventory()
 	{
 		bDivideItemsUsingCategory = false;
 		CategoryType = EIT_Miscellaneous;
+		SelectCategoryButtonStyle = FButtonStyle();
+		CategoryDisplayText = FText();
 	}
 
 	FCategoryInventory(bool _bDivideItemsUsingCategory, EItemType _CategoryType)
@@ -34,6 +40,7 @@ struct FCategoryInventory
 
 class UTextBlock;
 class URichTextBlock;
+class UImage;
 UCLASS()
 class MEDIEVALDYNASTY_API UInventoryMenuWidget : public UUserWidget
 {
@@ -41,6 +48,8 @@ class MEDIEVALDYNASTY_API UInventoryMenuWidget : public UUserWidget
 
 public:
 	void UpdateInventory(bool bDivideWithCategory = false, EItemType CategoryTypeToDivide = EIT_Miscellaneous);
+	void UpdateCategoryDisplayText(const FText& NewCategoryDisplayText);
+	void UpdateCategory(TObjectPtr<class USelectCategoryInventoryEntry> NewCurrentSelectedCategoryEntry);
 
 	FORCEINLINE void SetPlayerInventoryComponent(TObjectPtr<class UInventoryComponent> NewInventoryComponent) { PlayerInventoryComponent = NewInventoryComponent; }
 
@@ -48,14 +57,24 @@ protected:
 	virtual void NativeOnInitialized() override;
 
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
-	TObjectPtr<class UImage> BackgroundImage = nullptr;
+	TObjectPtr<UImage> BackgroundImage = nullptr;
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
 	TObjectPtr<class UTileView> SelectCategoryInventoryTileView = nullptr;
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
 	TObjectPtr<class UListView> CategoryInventoryListView = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
-	TObjectPtr<UTextBlock> InventoryDisplayName = nullptr;
+	TObjectPtr<UTextBlock> NoItemsDisplayTextBlock = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
+	TObjectPtr<class UHorizontalBox> CategoryNameHorizontalBox = nullptr;
+	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
+	TObjectPtr<UTextBlock> CategoryDisplayName = nullptr;
+	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
+	TObjectPtr<UImage> LeftCategoryDecorationImage = nullptr;
+	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
+	TObjectPtr<UImage> RightCategoryDecorationImage = nullptr;
+
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
 	TObjectPtr<URichTextBlock> WeightInformationRichTextBlock = nullptr;
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
@@ -63,10 +82,14 @@ protected:
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Inventory Settings")
+	TEnumAsByte<EItemType> InitiallCategoryType = EIT_None;
+	UPROPERTY(EditDefaultsOnly, Category = "Inventory Settings")
 	TArray<FCategoryInventory> AllCategoryToDivideItems = {FCategoryInventory()};
 
 	void FillSelectCategoryInventoryTileView();
 
+	UPROPERTY(Transient)
+	TObjectPtr<class USelectCategoryInventoryEntry> CurrentSelectedCategoryEntry = nullptr;
 	UPROPERTY(Transient)
 	TObjectPtr<class UInventoryComponent> PlayerInventoryComponent = nullptr;
 };

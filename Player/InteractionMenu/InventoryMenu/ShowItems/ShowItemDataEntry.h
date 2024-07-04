@@ -18,7 +18,6 @@ protected:
 	virtual void NativeOnInitialized() override;
 	virtual void NativeOnListItemObjectSet(UObject* ListItemObject) override;
 
-
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
 	TObjectPtr<class UButton> SelectItemButton = nullptr;
 

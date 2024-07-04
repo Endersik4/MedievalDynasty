@@ -51,6 +51,9 @@ public:
 	void UpdateCategoryDisplayText(const FText& NewCategoryDisplayText);
 	void UpdateCategory(TObjectPtr<class USelectCategoryInventoryEntry> NewCurrentSelectedCategoryEntry);
 
+	UFUNCTION()
+	void OnClicked_ShowItemDataEntry(class UShowItemDataObject* Item);
+
 	FORCEINLINE void SetPlayerInventoryComponent(TObjectPtr<class UInventoryComponent> NewInventoryComponent) { PlayerInventoryComponent = NewInventoryComponent; }
 
 protected:
@@ -79,6 +82,9 @@ protected:
 	TObjectPtr<URichTextBlock> WeightInformationRichTextBlock = nullptr;
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
 	TObjectPtr<URichTextBlock> MoneyInformationRichTextBlock = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
+	TObjectPtr<class UDetailedItemInfoWidget> DetailedItemInfoWidget = nullptr;
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Inventory Settings")

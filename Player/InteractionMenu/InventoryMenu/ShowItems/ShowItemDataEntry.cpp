@@ -7,22 +7,28 @@
 #include "Components/TextBlock.h"
 
 #include "ShowItemDataObject.h"
+#include "MedievalDynasty/Player/InteractionMenu/InventoryMenu/InventoryMenuWidget.h"
 
 void UShowItemDataEntry::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
+	SelectItemButton->OnClicked.AddDynamic(this, &UShowItemDataEntry::OnClicked_SelectItemButton);
 }
 
 void UShowItemDataEntry::NativeOnListItemObjectSet(UObject* ListItemObject)
 {
-
 	if (!IsValid(ListItemObject))
 		return;
 	
 	ShowItemDataObject = Cast<UShowItemDataObject>(ListItemObject);
 	if (!IsValid(ShowItemDataObject))
 		return;
+
+	if (ShowItemDataObject->bInitallySelectedItem)
+	{
+		OnClicked_SelectItemButton();
+	}
 
 	UpdateItemDisplayInformations();
 }
@@ -44,4 +50,15 @@ void UShowItemDataEntry::UpdateItemDisplayInformations()
 	ItemWeightTextBlock->SetText(FText::AsNumber(ShowItemDataObject->ItemData.ItemWeight * ShowItemDataObject->ItemAmount));
 
 	ItemPriceTextBlock->SetText(FText::AsNumber(ShowItemDataObject->ItemData.ItemPrice));
+}
+
+void UShowItemDataEntry::OnClicked_SelectItemButton()
+{
+	if (!IsValid(ShowItemDataObject))
+		return;
+
+	if (!IsValid(ShowItemDataObject->InventoryMenuWidget))
+		return;
+
+	ShowItemDataObject->InventoryMenuWidget->OnClicked_ShowItemDataEntry(ShowItemDataObject);
 }

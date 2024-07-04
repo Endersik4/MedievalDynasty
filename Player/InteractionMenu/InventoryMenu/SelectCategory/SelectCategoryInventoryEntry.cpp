@@ -25,7 +25,7 @@ void USelectCategoryInventoryEntry::NativeOnListItemObjectSet(UObject* ListItemO
 
 	SelectCategoryButton->SetStyle(SelectCategoryEntryObject->CategoryToDivideItems.SelectCategoryButtonStyle);
 
-	if (SelectCategoryEntryObject->bInitallCategory)
+	if (SelectCategoryEntryObject->bInitallySelectedCategory)
 		OnClicked_SortInventoryButton();
 }
 
@@ -35,8 +35,8 @@ void USelectCategoryInventoryEntry::OnClicked_SortInventoryButton()
 		return;
 
 	SelectCategoryEntryObject->InventoryMenuWidget->UpdateCategoryDisplayText(SelectCategoryEntryObject->CategoryToDivideItems.CategoryDisplayText);
-	SelectCategoryEntryObject->InventoryMenuWidget->UpdateInventory(SelectCategoryEntryObject->CategoryToDivideItems.bDivideItemsUsingCategory, SelectCategoryEntryObject->CategoryToDivideItems.CategoryType);
 	SelectCategoryEntryObject->InventoryMenuWidget->UpdateCategory(this);
+	SelectCategoryEntryObject->InventoryMenuWidget->UpdateInventory(SelectCategoryEntryObject->CategoryToDivideItems.bDivideItemsUsingCategory, SelectCategoryEntryObject->CategoryToDivideItems.CategoryType);
 
 	ActivateCategoryEntry(true);
 }

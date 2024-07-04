@@ -15,16 +15,20 @@
 #include "ShowItems/ShowItemDataObject.h"
 #include "SelectCategory/SelectCategoryInventoryEntry.h"
 #include "MedievalDynasty/Player/MedievalPlayer.h"
+#include "MedievalDynasty/Player/InteractionMenu/InventoryMenu/DetailedItemInfoWidget.h"
 
 void UInventoryMenuWidget::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
+
+	DetailedItemInfoWidget->SetVisibility(ESlateVisibility::Hidden);
 
 	TObjectPtr<AMedievalPlayer> Player = Cast<AMedievalPlayer>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 	if (IsValid(Player))
 		PlayerInventoryComponent = Player->GetInventoryComponent();
 
 	FillSelectCategoryInventoryTileView();
+
 	UpdateInventory();
 }
 
@@ -40,9 +44,9 @@ void UInventoryMenuWidget::FillSelectCategoryInventoryTileView()
 		SpawnedSelectCategoryObject->InventoryMenuWidget = this;
 
 		if (!CurrentSelectCategory.bDivideItemsUsingCategory && InitiallCategoryType == EIT_None)
-			SpawnedSelectCategoryObject->bInitallCategory = true;
+			SpawnedSelectCategoryObject->bInitallySelectedCategory = true;
 		else if (InitiallCategoryType == CurrentSelectCategory.CategoryType)
-			SpawnedSelectCategoryObject->bInitallCategory = true;
+			SpawnedSelectCategoryObject->bInitallySelectedCategory = true;
 
 		SelectCategoryInventoryTileView->AddItem(SpawnedSelectCategoryObject);
 	}
@@ -62,7 +66,8 @@ void UInventoryMenuWidget::UpdateInventory(bool bDivideWithCategory, EItemType C
 		if (!CurrentItemData)
 			continue;
 
-		if (bDivideWithCategory && CurrentItemData->ItemType != CategoryTypeToDivide)
+		// if player selected category then add only items with that category
+		if (bDivideWithCategory && CurrentItemData->ItemType != CategoryTypeToDivide) 
 			continue;
 
 		TObjectPtr<UShowItemDataObject> SpawnedShowItemObject = NewObject<UShowItemDataObject>();
@@ -72,6 +77,13 @@ void UInventoryMenuWidget::UpdateInventory(bool bDivideWithCategory, EItemType C
 		SpawnedShowItemObject->ItemAmount = CurrentItemFromInv.ItemAmount;
 		SpawnedShowItemObject->ItemData = *CurrentItemData;
 		SpawnedShowItemObject->RowNameToFindItemData = CurrentItemFromInv.ItemRowName;
+		SpawnedShowItemObject->InventoryMenuWidget = this;
+
+		// if this is the first item to be added then show detailed information
+		if (CategoryInventoryListView->GetNumItems() == 0)
+		{
+			SpawnedShowItemObject->bInitallySelectedItem = true;
+		}
 
 		NoItemsDisplayTextBlock->SetVisibility(ESlateVisibility::Hidden);
 
@@ -90,4 +102,17 @@ void UInventoryMenuWidget::UpdateCategory(TObjectPtr<class USelectCategoryInvent
 		CurrentSelectedCategoryEntry->ActivateCategoryEntry(false);
 
 	CurrentSelectedCategoryEntry = NewCurrentSelectedCategoryEntry;
+
+	DetailedItemInfoWidget->SetVisibility(ESlateVisibility::Hidden);
 }
+
+#pragma region /////////// DETAILED INFORMATION ABOUT ITEM ///////////////
+void UInventoryMenuWidget::OnClicked_ShowItemDataEntry(UShowItemDataObject* ClickedShowItemDataObject)
+{
+	if (!IsValid(ClickedShowItemDataObject))
+		return;
+
+	DetailedItemInfoWidget->SetVisibility(ESlateVisibility::HitTestInvisible);
+	DetailedItemInfoWidget->UpdateItemInformation(&ClickedShowItemDataObject->ItemData);
+}
+#pragma endregion

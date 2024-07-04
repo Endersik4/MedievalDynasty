@@ -22,5 +22,8 @@ public:
 	FBaseItemData ItemData;
 	UPROPERTY(EditAnywhere)
 	FName RowNameToFindItemData = FName();
-	
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<class UInventoryMenuWidget> InventoryMenuWidget = nullptr;
+	UPROPERTY(EditAnywhere)
+	bool bInitallySelectedItem = false;
 };

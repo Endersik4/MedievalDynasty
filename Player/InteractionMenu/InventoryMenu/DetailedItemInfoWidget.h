@@ -27,9 +27,14 @@ protected:
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
 	TObjectPtr<UTextBlock> ItemNameTextBlock = nullptr;
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
-	TObjectPtr<URichTextBlock> ItemInformationRichTextBlock = nullptr;
-	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
 	TObjectPtr<UTextBlock> ItemDescriptionTextBlock = nullptr;
 
-
+	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
+	TObjectPtr<URichTextBlock> ItemInfoDurabilityRichTextBlock = nullptr;
+	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
+	TObjectPtr<URichTextBlock> ItemInfoWeightRichTextBlock = nullptr;
+	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
+	TObjectPtr<URichTextBlock> ItemInfoPriceRichTextBlock = nullptr;
+	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
+	TObjectPtr<URichTextBlock> ItemInfoStorageRichTextBlock = nullptr;
 };

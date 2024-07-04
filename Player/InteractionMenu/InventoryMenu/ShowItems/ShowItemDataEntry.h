@@ -34,6 +34,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
 	TObjectPtr<UTextBlock> ItemPriceTextBlock = nullptr;
 
+	UFUNCTION()
+	void OnClicked_SelectItemButton();
+
 private:
 	UPROPERTY(Transient)
 	TObjectPtr<class UShowItemDataObject> ShowItemDataObject = nullptr;

@@ -15,7 +15,14 @@ void UDetailedItemInfoWidget::UpdateItemInformation(FBaseItemData* ItemData)
 	ItemNameTextBlock->SetText(ItemData->ItemDisplayText);
 	ItemDescriptionTextBlock->SetText(ItemData->ItemDisplayDescription);
 
-	FString ItemInformations = FString::SanitizeFloat(ItemData->ItemDurability) + FString::SanitizeFloat(ItemData->ItemWeight) 
-		+ FString::SanitizeFloat(ItemData->ItemPrice) + ItemData->ItemStorageName.ToString();
-	ItemInformationRichTextBlock->SetText(FText::FromString(ItemInformations));
+	FString ItemInformations = FString::SanitizeFloat(ItemData->ItemDurability, 0) + "%";
+	ItemInfoDurabilityRichTextBlock->SetText(FText::FromString(ItemInformations));
+
+	ItemInformations = FString::SanitizeFloat(ItemData->ItemWeight, 0) + " kg";
+	ItemInfoWeightRichTextBlock->SetText(FText::FromString(ItemInformations));
+
+	ItemInformations = FString::SanitizeFloat(ItemData->ItemPrice, 0);
+	ItemInfoPriceRichTextBlock->SetText(FText::FromString(ItemInformations));
+
+	ItemInfoStorageRichTextBlock->SetText(ItemData->ItemStorageName);
 }

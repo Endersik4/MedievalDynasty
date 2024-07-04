@@ -17,7 +17,7 @@ class MEDIEVALDYNASTY_API USelectCategoryEntryObject : public UObject
 	
 public:
 	UPROPERTY(EditAnywhere)
-	bool bInitallCategory = false;
+	bool bInitallySelectedCategory = false;
 	UPROPERTY(EditAnywhere)
 	FCategoryInventory CategoryToDivideItems;
 	UPROPERTY(EditAnywhere)

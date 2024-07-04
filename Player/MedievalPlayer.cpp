@@ -11,6 +11,7 @@
 #include "Net/UnrealNetwork.h"
 
 #include "Inventory/InventoryComponent.h"
+#include "Components/PlayerStatusComponent.h"
 
 AMedievalPlayer::AMedievalPlayer()
 {
@@ -30,6 +31,7 @@ AMedievalPlayer::AMedievalPlayer()
 	CameraComponent->SetupAttachment(SpringArmComponent);
 
 	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("Inventory Component"));
+	PlayerStatusComponent = CreateDefaultSubobject<UPlayerStatusComponent>(TEXT("Player Status Component"));
 
 	bReplicates = true;
 	SetReplicateMovement(true);

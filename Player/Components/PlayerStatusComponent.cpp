@@ -3,6 +3,9 @@
 
 #include "MedievalDynasty/Player/Components/PlayerStatusComponent.h"
 
+#include "MedievalDynasty/Player/MedievalPlayer.h"
+#include "MedievalDynasty/Player/Inventory/InventoryComponent.h"
+
 UPlayerStatusComponent::UPlayerStatusComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
@@ -14,9 +17,8 @@ void UPlayerStatusComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	
+	Player = Cast<AMedievalPlayer>(GetOwner());
 }
-
 
 void UPlayerStatusComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
@@ -24,7 +26,7 @@ void UPlayerStatusComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 
 }
 
-float UPlayerStatusComponent::GetStatusValue(EStatusType StatusToGet)
+double UPlayerStatusComponent::GetStatusValue(EStatusType StatusToGet)
 {
 	switch (StatusToGet)
 	{
@@ -40,6 +42,35 @@ float UPlayerStatusComponent::GetStatusValue(EStatusType StatusToGet)
 	case EST_ProtectionFromHeat: return ProtectionFromHeat; break;
 	case EST_Dirtiness: return Dirtiness; break;
 	default: return 0.f;
+	}
+}
+
+float UPlayerStatusComponent::GetStatusMaxValue(EStatusType StatusToGet)
+{
+	switch (StatusToGet)
+	{
+	case EST_Health: return MaxHealth; break;
+	case EST_Food: return MaxFood; break;
+	case EST_Water: return MaxWater; break;
+	case EST_Weight: return MaxWeight; break;
+	default: return 0.f;
+	}
+}
+
+void UPlayerStatusComponent::RefreshWeightValue()
+{
+	if (!IsValid(Player))
+		return;
+
+	Weight = 0.0;
+
+	for (const FInitiallInventory& CurrentItem : Player->GetInventoryComponent()->GetInventory())
+	{
+		FBaseItemData* ItemData = Player->GetInventoryComponent()->GetItemDataFromDataTable(CurrentItem.ItemRowName);
+		if (!ItemData)
+			continue;
+
+		Weight += ItemData->ItemWeight * CurrentItem.ItemAmount;
 	}
 }
 

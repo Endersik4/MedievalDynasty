@@ -39,7 +39,7 @@ struct FBaseItemData : public FTableRowBase
 	UPROPERTY(EditAnywhere, meta = (ClampMax = "100.0", ClampMin = "0.0", UIMin = "0.0", UIMax = "100.0"))
 	float ItemDurability = 0.f;
 	UPROPERTY(EditAnywhere)
-	float ItemWeight = 0.f;
+	double ItemWeight = 0.f;
 	UPROPERTY(EditAnywhere)
 	float ItemPrice = 0.f;
 	UPROPERTY(EditAnywhere)

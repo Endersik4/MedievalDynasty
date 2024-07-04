@@ -14,6 +14,10 @@ void UShowItemDataEntry::NativeOnInitialized()
 	Super::NativeOnInitialized();
 
 	SelectItemButton->OnClicked.AddDynamic(this, &UShowItemDataEntry::OnClicked_SelectItemButton);
+	SelectItemButton->OnHovered.AddDynamic(this, &UShowItemDataEntry::OnHovered_SelectItemButton);
+	SelectItemButton->OnUnhovered.AddDynamic(this, &UShowItemDataEntry::OnUnhovered_SelectItemButton);
+
+	OriginalTextColor = ItemAmountTextBlock->GetColorAndOpacity();
 }
 
 void UShowItemDataEntry::NativeOnListItemObjectSet(UObject* ListItemObject)
@@ -61,4 +65,23 @@ void UShowItemDataEntry::OnClicked_SelectItemButton()
 		return;
 
 	ShowItemDataObject->InventoryMenuWidget->OnClicked_ShowItemDataEntry(ShowItemDataObject);
+}
+
+void UShowItemDataEntry::OnHovered_SelectItemButton()
+{
+	ChangeFontColorToAllTextes(OnHoveredFontColor);
+}
+
+void UShowItemDataEntry::OnUnhovered_SelectItemButton()
+{
+	ChangeFontColorToAllTextes(OriginalTextColor);
+}
+
+void UShowItemDataEntry::ChangeFontColorToAllTextes(const FSlateColor& NewColor)
+{
+	ItemNameTextBlock->SetColorAndOpacity(NewColor);
+	ItemAmountTextBlock->SetColorAndOpacity(NewColor);
+	ItemDurabilityTextBlock->SetColorAndOpacity(NewColor);
+	ItemWeightTextBlock->SetColorAndOpacity(NewColor);
+	ItemPriceTextBlock->SetColorAndOpacity(NewColor);
 }

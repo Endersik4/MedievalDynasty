@@ -27,6 +27,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	FORCEINLINE TObjectPtr<class UInventoryComponent> GetInventoryComponent() const {return InventoryComponent;}
+	FORCEINLINE TObjectPtr<class UPlayerStatusComponent> GetPlayerStatusComponent() const {return PlayerStatusComponent;}
 
 protected:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
@@ -53,6 +54,8 @@ private:
 	TObjectPtr<class UCameraComponent> CameraComponent = nullptr;
 	UPROPERTY(EditDefaultsOnly, Category = "Components")
 	TObjectPtr<class UInventoryComponent> InventoryComponent = nullptr;
+	UPROPERTY(EditDefaultsOnly, Category = "Components")
+	TObjectPtr<class UPlayerStatusComponent> PlayerStatusComponent = nullptr;
 
 	UPROPERTY(EditAnywhere, Category = "Player Settings|Movement")
 	float MovementSpeed = 80000.f;

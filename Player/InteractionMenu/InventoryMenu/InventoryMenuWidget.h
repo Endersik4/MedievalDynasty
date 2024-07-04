@@ -70,6 +70,11 @@ protected:
 	TObjectPtr<UTextBlock> NoItemsDisplayTextBlock = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
+	TObjectPtr<UTextBlock> MoneyDisplayTextBlock = nullptr;
+	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
+	TObjectPtr<UTextBlock> WeightDisplayTextBlock = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
 	TObjectPtr<class UHorizontalBox> CategoryNameHorizontalBox = nullptr;
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
 	TObjectPtr<UTextBlock> CategoryDisplayName = nullptr;
@@ -94,10 +99,14 @@ private:
 
 	void FillSelectCategoryInventoryTileView();
 
+	void UpdatePlayerStatus();
+
 	UPROPERTY(Transient)
 	TObjectPtr<class USelectCategoryInventoryEntry> CurrentSelectedCategoryEntry = nullptr;
 	UPROPERTY(Transient)
 	TObjectPtr<class UInventoryComponent> PlayerInventoryComponent = nullptr;
+	UPROPERTY(Transient)
+	TObjectPtr<class AMedievalPlayer> Player = nullptr;
 };
 
 

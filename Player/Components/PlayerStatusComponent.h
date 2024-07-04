@@ -23,22 +23,25 @@ enum EStatusType
 	EST_Dirtiness UMETA(DisplayName = "Dirtiness"),
 };
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class MEDIEVALDYNASTY_API UPlayerStatusComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	UPlayerStatusComponent();
 
 protected:
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	float GetStatusValue(EStatusType StatusToGet);
-		
+	double GetStatusValue(EStatusType StatusToGet);
+	float GetStatusMaxValue(EStatusType StatusToGet);
+
+	void RefreshWeightValue();
+
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Player Status")
 	float MaxHealth = 100.f;
@@ -56,9 +59,9 @@ private:
 	UPROPERTY(Transient, VisibleAnywhere, Category = "Player Status")
 	float Water = 100.f;
 	UPROPERTY(Transient, VisibleAnywhere, Category = "Player Status")
-	float Weight = 0.f;
+	double Weight = 0.f;
 	UPROPERTY(Transient, VisibleAnywhere, Category = "Player Status")
-	float Money = 0.f;
+	float Money = 50.f;
 	UPROPERTY(Transient, VisibleAnywhere, Category = "Player Status", meta = (UIMin = "0.0", UIMax = "1.0", ClampMin = "0.0", ClampMax = "1.0"))
 	float Poison = 1.f;
 	UPROPERTY(Transient, VisibleAnywhere, Category = "Player Status", meta = (UIMin = "0.0", UIMax = "1.0", ClampMin = "0.0", ClampMax = "1.0"))
@@ -71,4 +74,7 @@ private:
 	float ProtectionFromHeat = 1.f;
 	UPROPERTY(Transient, VisibleAnywhere, Category = "Player Status", meta = (UIMin = "0.0", UIMax = "1.0", ClampMin = "0.0", ClampMax = "1.0"))
 	float Dirtiness = 1.f;
+
+	UPROPERTY(Transient)
+	TObjectPtr<class AMedievalPlayer> Player = nullptr;
 };

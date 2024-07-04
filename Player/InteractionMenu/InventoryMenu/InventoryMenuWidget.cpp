@@ -8,13 +8,13 @@
 #include "Components/Button.h"
 #include "Components/TextBlock.h"
 #include "Components/HorizontalBox.h"
-#include "Kismet/GameplayStatics.h"
 
 #include "MedievalDynasty/Player//Inventory/InventoryComponent.h"
 #include "SelectCategory/SelectCategoryEntryObject.h"
 #include "ShowItems/ShowItemDataObject.h"
 #include "SelectCategory/SelectCategoryInventoryEntry.h"
 #include "MedievalDynasty/Player/MedievalPlayer.h"
+#include "MedievalDynasty/Player/Components/PlayerStatusComponent.h"
 #include "MedievalDynasty/Player/InteractionMenu/InventoryMenu/DetailedItemInfoWidget.h"
 
 void UInventoryMenuWidget::NativeOnInitialized()
@@ -23,13 +23,13 @@ void UInventoryMenuWidget::NativeOnInitialized()
 
 	DetailedItemInfoWidget->SetVisibility(ESlateVisibility::Hidden);
 
-	TObjectPtr<AMedievalPlayer> Player = Cast<AMedievalPlayer>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+	Player = Cast<AMedievalPlayer>(GetOwningPlayerPawn());
 	if (IsValid(Player))
 		PlayerInventoryComponent = Player->GetInventoryComponent();
-
+	
 	FillSelectCategoryInventoryTileView();
 
-	UpdateInventory();
+	UpdatePlayerStatus();
 }
 
 void UInventoryMenuWidget::FillSelectCategoryInventoryTileView()
@@ -89,6 +89,7 @@ void UInventoryMenuWidget::UpdateInventory(bool bDivideWithCategory, EItemType C
 
 		CategoryInventoryListView->AddItem(SpawnedShowItemObject);
 	}
+
 }
 
 void UInventoryMenuWidget::UpdateCategoryDisplayText(const FText& NewCategoryDisplayText)
@@ -104,6 +105,25 @@ void UInventoryMenuWidget::UpdateCategory(TObjectPtr<class USelectCategoryInvent
 	CurrentSelectedCategoryEntry = NewCurrentSelectedCategoryEntry;
 
 	DetailedItemInfoWidget->SetVisibility(ESlateVisibility::Hidden);
+}
+
+void UInventoryMenuWidget::UpdatePlayerStatus()
+{
+	if (!IsValid(Player))
+		return;
+
+	TObjectPtr<UPlayerStatusComponent> PlayerStatusComponent = Player->GetPlayerStatusComponent();
+	if (!IsValid(PlayerStatusComponent))
+		return;
+
+	PlayerStatusComponent->RefreshWeightValue();
+
+	const FString MoneyValue = FString::SanitizeFloat(PlayerStatusComponent->GetStatusValue(EST_Money), 0);
+	MoneyDisplayTextBlock->SetText(FText::FromString(MoneyValue));
+
+	const FString WeightInformation = FString::SanitizeFloat(PlayerStatusComponent->GetStatusValue(EST_Weight)) + " / "
+		+ FString::SanitizeFloat(PlayerStatusComponent->GetStatusMaxValue(EST_Weight), 2) + " kg";
+	WeightDisplayTextBlock->SetText(FText::FromString(WeightInformation));
 }
 
 #pragma region /////////// DETAILED INFORMATION ABOUT ITEM ///////////////

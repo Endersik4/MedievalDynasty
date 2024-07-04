@@ -71,6 +71,9 @@ bool UInventoryComponent::CloseInventory()
 
 FBaseItemData* UInventoryComponent::GetItemDataFromDataTable(const FName& RowName)
 {
+	if (!AllItemsDataTable)
+		return nullptr;
+
 	return AllItemsDataTable->FindRow<FBaseItemData>(RowName, "");
 }
 

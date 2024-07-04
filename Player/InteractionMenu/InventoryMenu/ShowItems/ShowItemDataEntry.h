@@ -36,10 +36,23 @@ protected:
 
 	UFUNCTION()
 	void OnClicked_SelectItemButton();
+	UFUNCTION()
+	void OnHovered_SelectItemButton();
+	UFUNCTION()
+	void OnUnhovered_SelectItemButton();
 
 private:
+	UPROPERTY(EditDefaultsOnly, Category = "Show Item Data Settings")
+	FSlateColor OnHoveredFontColor = FSlateColor();
+
+	void UpdateItemDisplayInformations();
+
+	void ChangeFontColorToAllTextes(const FSlateColor& NewColor);
+
 	UPROPERTY(Transient)
 	TObjectPtr<class UShowItemDataObject> ShowItemDataObject = nullptr;
 
-	void UpdateItemDisplayInformations();
+	UPROPERTY(Transient)
+	FSlateColor OriginalTextColor = FSlateColor();
+
 };

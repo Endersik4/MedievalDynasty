@@ -47,13 +47,18 @@ void UPlayerStatusEntry::UpdatePlayerStatusEntry()
 	if (PlayerStatusEntry.StatusValueType == ESVT_Max)
 	{
 		StatusProgressBar->SetPercent(StatusValue / PlayerStatusComponent->GetStatusMaxValue(PlayerStatusEntry.StatusType));
-
+		StatusValue = FMath::RoundValuesToGivenDecimalNumbers(StatusValue, 1);
 		const FString Value = FString::SanitizeFloat(StatusValue, 0) + "/" + FString::SanitizeFloat(PlayerStatusComponent->GetStatusMaxValue(PlayerStatusEntry.StatusType), 0);
 		StatusValueText->SetText(FText::FromString(Value));
 	}
 	else
 	{
 		StatusProgressBar->SetPercent(StatusValue);
+
+		if (PlayerStatusEntry.StatusValueType == ESVT_Percent)
+		{
+			StatusValue = FMath::RoundValuesToGivenDecimalNumbers(StatusValue * 100.f, 0);
+		}
 
 		FString Value = FString::SanitizeFloat(StatusValue, 0);
 		if (PlayerStatusEntry.StatusValueType == ESVT_Percent)

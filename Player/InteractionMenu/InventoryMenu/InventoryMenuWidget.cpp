@@ -84,12 +84,6 @@ void UInventoryMenuWidget::UpdateInventory(bool bDivideWithCategory, EItemType C
 		SpawnedShowItemObject->RowNameToFindItemData = CurrentItemFromInv.ItemRowName;
 		SpawnedShowItemObject->InventoryMenuWidget = this;
 
-		// if this is the first item to be added then show detailed information
-		if (CategoryInventoryListView->GetNumItems() == 0)
-		{
-			//SpawnedShowItemObject->bInitallySelectedItem = true;
-		}
-
 		NoItemsDisplayTextBlock->SetVisibility(ESlateVisibility::Hidden);
 
 		CategoryInventoryListView->AddItem(SpawnedShowItemObject);

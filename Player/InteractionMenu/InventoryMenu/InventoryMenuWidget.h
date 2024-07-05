@@ -96,6 +96,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
 	TObjectPtr<class USortItemsWidget> SortItemsWidget = nullptr;
 
+	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
+	TObjectPtr<class UStatusAndEquipmentWidget> StatusAndEquipmentWidget = nullptr;
+
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Inventory Settings")
 	TEnumAsByte<EItemType> InitiallCategoryType = EIT_None;

@@ -30,6 +30,25 @@ struct FStatusEntry
 	TEnumAsByte<EStatusValueType> StatusValueType = ESVT_Max;
 };
 
+USTRUCT(BlueprintType)
+struct FQuickToolSelectEntry
+{
+	GENERATED_USTRUCT_BODY();
+
+	UPROPERTY(EditAnywhere)
+	int32 QuickAttackNum = 0;
+};
+
+USTRUCT(BlueprintType)
+struct FEquipmentOnPlayer
+{
+	GENERATED_USTRUCT_BODY();
+
+	UPROPERTY(EditAnywhere)
+	FButtonStyle EquipmentButtonStyle = FButtonStyle();
+};
+
+
 class UWrapBox;
 class UTextBlock;
 class UTileView;
@@ -57,20 +76,27 @@ protected:
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
 	TObjectPtr<UTextBlock> PlayerNameAndAgeTextBlock = nullptr;
 
-	//UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
-	//TObjectPtr<UTileView> EquipmentTileView = nullptr;
+	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
+	TObjectPtr<UTileView> EquipmentTileView = nullptr;
 
-	//UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
-///	TObjectPtr<UTileView> WeaponShortcutsTileView = nullptr;
+	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
+	TObjectPtr<UTileView> WeaponShortcutsTileView = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
 	TObjectPtr<UTileView> PlayerStatusTileView = nullptr;
 
 private:
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, Category = "Status Settings")
 	TArray<FStatusEntry> StatusEntries;
+	UPROPERTY(EditDefaultsOnly, Category = "Quick Weapon Select Settings")
+	TArray<FQuickToolSelectEntry> QuickSelectEntries;
+	UPROPERTY(EditDefaultsOnly, Category = "Equipment Settings")
+	TArray<FEquipmentOnPlayer> AllEquipmentsOnPlayer;
+
 
 	void FillPlayerStatusTileView();
+	void FillWeaponShortcutsTileView();
+	void FillEquipmentTileView();
 
 	UPROPERTY(Transient)
 	TObjectPtr<class AMedievalPlayer> Player = nullptr;

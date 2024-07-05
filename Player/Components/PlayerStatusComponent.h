@@ -53,11 +53,11 @@ private:
 	float MaxWeight = 35.f;
 
 	UPROPERTY(Transient, VisibleAnywhere, Category = "Player Status")
-	float Health = 100.f;
+	double Health = 100.0;
 	UPROPERTY(Transient, VisibleAnywhere, Category = "Player Status")
-	float Food = 100.f;
+	double Food = 88.8;
 	UPROPERTY(Transient, VisibleAnywhere, Category = "Player Status")
-	float Water = 100.f;
+	double Water = 52.4;
 	UPROPERTY(Transient, VisibleAnywhere, Category = "Player Status")
 	double Weight = 0.f;
 	UPROPERTY(Transient, VisibleAnywhere, Category = "Player Status")

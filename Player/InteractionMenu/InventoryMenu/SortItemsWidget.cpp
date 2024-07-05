@@ -108,6 +108,9 @@ void USortItemsWidget::SortItems(auto LambdaToSortItems)
 	if (!IsValid(InventoryMenuWidget))
 		return;
 
+	if (InventoryMenuWidget->GetCategoryInventoryListView()->GetNumItems() == 0)
+		return;
+
 	TArray<TObjectPtr<UShowItemDataObject>> AllInventoryItems;
 	for (TObjectPtr<UObject> CurrentItem : InventoryMenuWidget->GetCategoryInventoryListView()->GetListItems())
 	{
@@ -122,5 +125,6 @@ void USortItemsWidget::SortItems(auto LambdaToSortItems)
 	}
 
 	AllInventoryItems.Sort(LambdaToSortItems);
+	AllInventoryItems[0]->bInitallySelectedItem = true;
 	InventoryMenuWidget->GetCategoryInventoryListView()->SetListItems(AllInventoryItems);
 }

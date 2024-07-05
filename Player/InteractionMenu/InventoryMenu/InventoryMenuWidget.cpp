@@ -87,7 +87,7 @@ void UInventoryMenuWidget::UpdateInventory(bool bDivideWithCategory, EItemType C
 		// if this is the first item to be added then show detailed information
 		if (CategoryInventoryListView->GetNumItems() == 0)
 		{
-			SpawnedShowItemObject->bInitallySelectedItem = true;
+			//SpawnedShowItemObject->bInitallySelectedItem = true;
 		}
 
 		NoItemsDisplayTextBlock->SetVisibility(ESlateVisibility::Hidden);

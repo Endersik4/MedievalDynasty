@@ -63,17 +63,17 @@ private:
 	UPROPERTY(Transient, VisibleAnywhere, Category = "Player Status")
 	float Money = 50.f;
 	UPROPERTY(Transient, VisibleAnywhere, Category = "Player Status", meta = (UIMin = "0.0", UIMax = "1.0", ClampMin = "0.0", ClampMax = "1.0"))
-	float Poison = 1.f;
+	float Poison = 0.f;
 	UPROPERTY(Transient, VisibleAnywhere, Category = "Player Status", meta = (UIMin = "0.0", UIMax = "1.0", ClampMin = "0.0", ClampMax = "1.0"))
-	float Intoxication = 1.f;
+	float Intoxication = 0.f;
 	UPROPERTY(Transient, VisibleAnywhere, Category = "Player Status")
 	float TemperatureTolerance = 20.f;
 	UPROPERTY(Transient, VisibleAnywhere, Category = "Player Status", meta = (UIMin = "0.0", UIMax = "1.0", ClampMin = "0.0", ClampMax = "1.0"))
-	float ProtectionFromCold = 1.f;
+	float ProtectionFromCold = 0.06f;
 	UPROPERTY(Transient, VisibleAnywhere, Category = "Player Status", meta = (UIMin = "0.0", UIMax = "1.0", ClampMin = "0.0", ClampMax = "1.0"))
-	float ProtectionFromHeat = 1.f;
+	float ProtectionFromHeat = 0.18f;
 	UPROPERTY(Transient, VisibleAnywhere, Category = "Player Status", meta = (UIMin = "0.0", UIMax = "1.0", ClampMin = "0.0", ClampMax = "1.0"))
-	float Dirtiness = 1.f;
+	float Dirtiness = 0.f;
 
 	UPROPERTY(Transient)
 	TObjectPtr<class AMedievalPlayer> Player = nullptr;

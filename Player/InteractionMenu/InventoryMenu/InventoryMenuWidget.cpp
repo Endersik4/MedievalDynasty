@@ -10,18 +10,23 @@
 #include "Components/HorizontalBox.h"
 
 #include "MedievalDynasty/Player//Inventory/InventoryComponent.h"
+#include "MedievalDynasty/Player/MedievalPlayer.h"
+#include "MedievalDynasty/Player/Components/PlayerStatusComponent.h"
 #include "SelectCategory/SelectCategoryEntryObject.h"
 #include "ShowItems/ShowItemDataObject.h"
 #include "SelectCategory/SelectCategoryInventoryEntry.h"
-#include "MedievalDynasty/Player/MedievalPlayer.h"
-#include "MedievalDynasty/Player/Components/PlayerStatusComponent.h"
-#include "MedievalDynasty/Player/InteractionMenu/InventoryMenu/DetailedItemInfoWidget.h"
+#include "DetailedItemInfoWidget.h"
+#include "SortItemsWidget.h"
 
 void UInventoryMenuWidget::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
 	DetailedItemInfoWidget->SetVisibility(ESlateVisibility::Hidden);
+	OriginalWeightColor = WeightDisplayTextBlock->GetColorAndOpacity();
+
+	if (IsValid(SortItemsWidget))
+		SortItemsWidget->SetInventoryMenuWidget(this);
 
 	Player = Cast<AMedievalPlayer>(GetOwningPlayerPawn());
 	if (IsValid(Player))
@@ -90,6 +95,7 @@ void UInventoryMenuWidget::UpdateInventory(bool bDivideWithCategory, EItemType C
 		CategoryInventoryListView->AddItem(SpawnedShowItemObject);
 	}
 
+	SortItemsByNameDescending();
 }
 
 void UInventoryMenuWidget::UpdateCategoryDisplayText(const FText& NewCategoryDisplayText)
@@ -116,14 +122,41 @@ void UInventoryMenuWidget::UpdatePlayerStatus()
 	if (!IsValid(PlayerStatusComponent))
 		return;
 
-	PlayerStatusComponent->RefreshWeightValue();
-
 	const FString MoneyValue = FString::SanitizeFloat(PlayerStatusComponent->GetStatusValue(EST_Money), 0);
 	MoneyDisplayTextBlock->SetText(FText::FromString(MoneyValue));
 
-	const FString WeightInformation = FString::SanitizeFloat(PlayerStatusComponent->GetStatusValue(EST_Weight)) + " / "
-		+ FString::SanitizeFloat(PlayerStatusComponent->GetStatusMaxValue(EST_Weight), 2) + " kg";
+	UpdateWeight(PlayerStatusComponent);
+}
+
+void UInventoryMenuWidget::UpdateWeight(TObjectPtr<class UPlayerStatusComponent> PlayerStatusComponent)
+{
+	if (!IsValid(PlayerStatusComponent))
+		return;
+
+	PlayerStatusComponent->RefreshWeightValue();
+
+	const double& CurrentWeight = PlayerStatusComponent->GetStatusValue(EST_Weight);
+	const double& MaxWeight = PlayerStatusComponent->GetStatusMaxValue(EST_Weight);
+
+	const FString WeightInformation = FString::SanitizeFloat(CurrentWeight) + " / "
+		+ FString::SanitizeFloat(MaxWeight, 2) + " kg";
 	WeightDisplayTextBlock->SetText(FText::FromString(WeightInformation));
+
+	if (CurrentWeight > MaxWeight)
+		WeightDisplayTextBlock->SetColorAndOpacity(WeightColorWhenExceeded);
+	else
+		WeightDisplayTextBlock->SetColorAndOpacity(OriginalWeightColor);
+}
+
+void UInventoryMenuWidget::SortItemsByNameDescending()
+{
+	if (!IsValid(SortItemsWidget))
+		return;
+
+	auto SortNameLambda = [](const TObjectPtr<UShowItemDataObject>& FirstItem, const TObjectPtr<UShowItemDataObject>& SecondItem)
+		{return FirstItem->ItemData.ItemDisplayText.ToString() < SecondItem->ItemData.ItemDisplayText.ToString(); };
+
+	SortItemsWidget->SortItems(SortNameLambda);
 }
 
 #pragma region /////////// DETAILED INFORMATION ABOUT ITEM ///////////////

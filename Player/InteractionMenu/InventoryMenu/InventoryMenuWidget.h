@@ -54,6 +54,8 @@ public:
 	UFUNCTION()
 	void OnClicked_ShowItemDataEntry(class UShowItemDataObject* Item);
 
+	FORCEINLINE TObjectPtr<class UListView> GetCategoryInventoryListView() const {return CategoryInventoryListView;}
+
 	FORCEINLINE void SetPlayerInventoryComponent(TObjectPtr<class UInventoryComponent> NewInventoryComponent) { PlayerInventoryComponent = NewInventoryComponent; }
 
 protected:
@@ -91,15 +93,26 @@ protected:
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
 	TObjectPtr<class UDetailedItemInfoWidget> DetailedItemInfoWidget = nullptr;
 
+	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
+	TObjectPtr<class USortItemsWidget> SortItemsWidget = nullptr;
+
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Inventory Settings")
 	TEnumAsByte<EItemType> InitiallCategoryType = EIT_None;
 	UPROPERTY(EditDefaultsOnly, Category = "Inventory Settings")
 	TArray<FCategoryInventory> AllCategoryToDivideItems = {FCategoryInventory()};
+	UPROPERTY(EditDefaultsOnly, Category = "Inventory Settings")
+	FSlateColor WeightColorWhenExceeded = FSlateColor(FColor::Red);
 
 	void FillSelectCategoryInventoryTileView();
 
 	void UpdatePlayerStatus();
+	void UpdateWeight(TObjectPtr<class UPlayerStatusComponent> PlayerStatusComponent);
+	UPROPERTY(Transient)
+	FSlateColor OriginalWeightColor = FSlateColor();
+
+	// when inventory is spawned then sort items by name
+	void SortItemsByNameDescending();
 
 	UPROPERTY(Transient)
 	TObjectPtr<class USelectCategoryInventoryEntry> CurrentSelectedCategoryEntry = nullptr;

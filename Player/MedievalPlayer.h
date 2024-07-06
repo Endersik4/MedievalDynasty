@@ -26,6 +26,9 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	FORCEINLINE FString GetPlayersName() const { return PlayersName; }
+	FORCEINLINE int32 GetPlayersAge() const { return PlayersAge; }
+
 	FORCEINLINE TObjectPtr<class USkeletalMeshComponent> GetPlayerSkeletalMesh() const { return PlayerSkeletalMesh; }
 	FORCEINLINE TObjectPtr<class UInventoryComponent> GetInventoryComponent() const {return InventoryComponent;}
 	FORCEINLINE TObjectPtr<class UPlayerStatusComponent> GetPlayerStatusComponent() const {return PlayerStatusComponent;}
@@ -57,6 +60,11 @@ private:
 	TObjectPtr<class UInventoryComponent> InventoryComponent = nullptr;
 	UPROPERTY(EditDefaultsOnly, Category = "Components")
 	TObjectPtr<class UPlayerStatusComponent> PlayerStatusComponent = nullptr;
+
+	UPROPERTY(EditAnywhere, Category = "Player Settings")
+	FString PlayersName = FString("Endersik");
+	UPROPERTY(EditAnywhere, Category = "Player Settings")
+	int32 PlayersAge = 18;
 
 	UPROPERTY(EditAnywhere, Category = "Player Settings|Movement")
 	float MovementSpeed = 80000.f;

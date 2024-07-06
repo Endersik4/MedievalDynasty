@@ -18,6 +18,7 @@ void UPlayerStatusEntry::NativeOnInitialized()
 	Super::NativeOnInitialized();
 
 	HoverStatusBorder->SetVisibility(ESlateVisibility::Hidden);
+	TemperaturePointerImage->SetVisibility(ESlateVisibility::Hidden);
 
 	HoverStatusButton->OnHovered.AddDynamic(this, &UPlayerStatusEntry::OnHovered_HoverStatusBorder);
 	HoverStatusButton->OnUnhovered.AddDynamic(this, &UPlayerStatusEntry::OnUnhovered_HoverStatusBorder);
@@ -60,6 +61,8 @@ void UPlayerStatusEntry::UpdatePlayerStatusEntry()
 		return;
 
 	TObjectPtr<UPlayerStatusComponent> PlayerStatusComponent = PlayerStatusObject->Player->GetPlayerStatusComponent();
+	if (!IsValid(PlayerStatusComponent))
+		return;
 
 	double StatusValue = PlayerStatusComponent->GetStatusValue(PlayerStatusEntry.StatusType);
 
@@ -70,23 +73,37 @@ void UPlayerStatusEntry::UpdatePlayerStatusEntry()
 		const FString Value = FString::SanitizeFloat(StatusValue, 0) + "/" + FString::SanitizeFloat(PlayerStatusComponent->GetStatusMaxValue(PlayerStatusEntry.StatusType), 0);
 		StatusValueText->SetText(FText::FromString(Value));
 	}
-	else
+	else if(PlayerStatusEntry.StatusValueType == ESVT_Temperature)
+	{
+		PrepareEntryForTemperature(PlayerStatusEntry, PlayerStatusComponent);
+	}
+	else if (PlayerStatusEntry.StatusValueType == ESVT_Percent)
 	{
 		StatusProgressBar->SetPercent(StatusValue);
+		StatusValue = FMath::RoundValuesToGivenDecimalNumbers(StatusValue * 100.f, 0);
 
-		if (PlayerStatusEntry.StatusValueType == ESVT_Percent)
-		{
-			StatusValue = FMath::RoundValuesToGivenDecimalNumbers(StatusValue * 100.f, 0);
-		}
-
-		FString Value = FString::SanitizeFloat(StatusValue, 0);
-		if (PlayerStatusEntry.StatusValueType == ESVT_Percent)
-			Value += "%";
-		else if (PlayerStatusEntry.StatusValueType == ESVT_Temperature)
-			Value += "C";
+		const FString& Value = FString::SanitizeFloat(StatusValue, 0) + "%";
 
 		StatusValueText->SetText(FText::FromString(Value));
 	}
+}
+
+void UPlayerStatusEntry::PrepareEntryForTemperature(const FStatusEntry& PlayerStatusEntry, TObjectPtr<UPlayerStatusComponent> PlayerStatusComponent)
+{
+	double StatusValue = PlayerStatusComponent->GetStatusValue(PlayerStatusEntry.StatusType);
+
+	FVector2D NewTemperaturePointerImageLocation = FVector2D(0.f);
+	if (StatusValue == 0.f)
+		NewTemperaturePointerImageLocation.X = TemperaturePointerLocationRange.GetLowerBoundValue();
+	else
+		NewTemperaturePointerImageLocation = FVector2D(FMath::Lerp(TemperaturePointerLocationRange.GetLowerBoundValue(), TemperaturePointerLocationRange.GetUpperBoundValue(),
+			StatusValue / PlayerStatusComponent->GetTemperatureToleranceRange().GetUpperBoundValue()), 0.f);
+
+	TemperaturePointerImage->SetRenderTranslation(NewTemperaturePointerImageLocation);
+	TemperaturePointerImage->SetVisibility(ESlateVisibility::HitTestInvisible);
+
+	const FString Value = FString::SanitizeFloat(StatusValue, 0) + "C";
+	StatusValueText->SetText(FText::FromString(Value));
 }
 
 #pragma region ////////// Hover Status /////////////

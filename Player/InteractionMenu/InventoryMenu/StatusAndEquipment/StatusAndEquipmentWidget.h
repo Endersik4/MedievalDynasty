@@ -92,6 +92,8 @@ protected:
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Status Settings")
+	FText AgeText = FText();
+	UPROPERTY(EditDefaultsOnly, Category = "Status Settings")
 	TArray<FStatusEntry> StatusEntries;
 	UPROPERTY(EditDefaultsOnly, Category = "Quick Weapon Select Settings")
 	TArray<FQuickToolSelectEntry> QuickSelectEntries;

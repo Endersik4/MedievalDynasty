@@ -3,6 +3,7 @@
 
 #include "MedievalDynasty/Player/InteractionMenu/InventoryMenu//StatusAndEquipment/StatusAndEquipmentWidget.h"
 #include "Components/TileView.h"
+#include "Components/TextBlock.h"
 
 #include "Status/PlayerStatusObject.h"
 #include "QuickSelect/QuickSelectEntryObject.h"
@@ -15,6 +16,12 @@ void UStatusAndEquipmentWidget::NativeOnInitialized()
 	Super::NativeOnInitialized();
 
 	Player = Cast<AMedievalPlayer>(GetOwningPlayerPawn());
+
+	if (IsValid(Player))
+	{
+		FString test = Player->GetPlayersName() + "\r\n" + AgeText.ToString() + FString::FromInt(Player->GetPlayersAge());
+		PlayerNameAndAgeTextBlock->SetText(FText::FromString(test));
+	}
 
 	FillPlayerStatusTileView();
 	FillWeaponShortcutsTileView();

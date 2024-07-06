@@ -38,16 +38,23 @@ protected:
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
 	TObjectPtr<class UTextBlock> HoverStatusTextBlock = nullptr;
 
+	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
+	TObjectPtr<class UImage> TemperaturePointerImage = nullptr;
+
 	UFUNCTION()
 	void OnHovered_HoverStatusBorder();
 	UFUNCTION()
 	void OnUnhovered_HoverStatusBorder();
 
 private:
+	UPROPERTY(EditDefaultsOnly, Category = "Temperature Tolerance Settings")
+	FFloatRange TemperaturePointerLocationRange = FFloatRange(-97.f, 97.f);
 
 	void MoveHoverStatus(const FGeometry& MyGeometry);
 	UPROPERTY(Transient)
 	bool bStatusHovered = false;
+
+	void PrepareEntryForTemperature(const FStatusEntry& PlayerStatusEntry, TObjectPtr<UPlayerStatusComponent> PlayerStatusComponent);
 
 	UPROPERTY(Transient)
 	TObjectPtr<class UPlayerStatusObject> PlayerStatusObject = nullptr;

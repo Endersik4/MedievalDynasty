@@ -28,6 +28,8 @@ struct FStatusEntry
 	FProgressBarStyle StatusProgressBarStyle = FProgressBarStyle();
 	UPROPERTY(EditAnywhere)
 	TEnumAsByte<EStatusValueType> StatusValueType = ESVT_Max;
+	UPROPERTY(EditAnywhere)
+	FText StatusEntryDisplayName = FText();
 };
 
 USTRUCT(BlueprintType)

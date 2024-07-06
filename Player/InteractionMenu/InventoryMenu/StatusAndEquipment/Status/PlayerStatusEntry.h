@@ -20,6 +20,7 @@ public:
 	
 protected:
 	virtual void NativeOnInitialized() override;
+	virtual void NativeTick(const FGeometry& MyGeometry, float DeltaTime) override;
 
 	virtual void NativeOnListItemObjectSet(UObject* ListItemObject) override;
 
@@ -30,7 +31,23 @@ protected:
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
 	TObjectPtr<class UTextBlock> StatusValueText = nullptr;
 
+	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
+	TObjectPtr<class UButton> HoverStatusButton = nullptr;
+	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
+	TObjectPtr<class UBorder> HoverStatusBorder = nullptr;
+	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
+	TObjectPtr<class UTextBlock> HoverStatusTextBlock = nullptr;
+
+	UFUNCTION()
+	void OnHovered_HoverStatusBorder();
+	UFUNCTION()
+	void OnUnhovered_HoverStatusBorder();
+
 private:
+
+	void MoveHoverStatus(const FGeometry& MyGeometry);
+	UPROPERTY(Transient)
+	bool bStatusHovered = false;
 
 	UPROPERTY(Transient)
 	TObjectPtr<class UPlayerStatusObject> PlayerStatusObject = nullptr;

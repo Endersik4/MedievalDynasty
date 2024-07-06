@@ -19,8 +19,8 @@ void UStatusAndEquipmentWidget::NativeOnInitialized()
 
 	if (IsValid(Player))
 	{
-		FString test = Player->GetPlayersName() + "\r\n" + AgeText.ToString() + FString::FromInt(Player->GetPlayersAge());
-		PlayerNameAndAgeTextBlock->SetText(FText::FromString(test));
+		FString NameAndAgeText = Player->GetPlayersName() + "\r\n" + AgeText.ToString() + FString::FromInt(Player->GetPlayersAge());
+		PlayerNameAndAgeTextBlock->SetText(FText::FromString(NameAndAgeText));
 	}
 
 	FillPlayerStatusTileView();

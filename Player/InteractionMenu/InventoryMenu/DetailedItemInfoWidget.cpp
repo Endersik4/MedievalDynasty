@@ -15,7 +15,17 @@ void UDetailedItemInfoWidget::UpdateItemInformation(FBaseItemData* ItemData)
 	ItemNameTextBlock->SetText(ItemData->ItemDisplayText);
 	ItemDescriptionTextBlock->SetText(ItemData->ItemDisplayDescription);
 
-	FString ItemInformations = FString::SanitizeFloat(ItemData->ItemDurability, 0) + "%";
+	FString ItemInformations = FString::SanitizeFloat(ItemData->ItemDurability, 0);
+	if (ItemData->DurabilityType == EDT_DestroyOverTime)
+	{
+		ItemInformations += "%";
+		ItemDurabilityIconImage->SetBrushFromTexture(DurabilityType_DestroyOverTime_Texture, true);
+	}
+	else if (ItemData->DurabilityType == EDT_Uses)
+	{
+		ItemInformations += " / " + FString::SanitizeFloat(ItemData->ItemInitallDurability, 0);
+		ItemDurabilityIconImage->SetBrushFromTexture(DurabilityType_Uses_Texture, true);
+	}
 	ItemInfoDurabilityRichTextBlock->SetText(FText::FromString(ItemInformations));
 
 	ItemInformations = FString::SanitizeFloat(ItemData->ItemWeight, 0) + " kg";

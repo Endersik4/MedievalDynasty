@@ -18,6 +18,54 @@ enum EItemType
 	EIT_None UMETA(DisplayName = "None"),
 };
 
+UENUM(BlueprintType)
+enum EStatusType
+{
+	EST_Health UMETA(DisplayName = "Health"),
+	EST_Energy UMETA(DisplayName = "Energy"),
+	EST_Food UMETA(DisplayName = "Food"),
+	EST_Water UMETA(DisplayName = "Water"),
+	EST_Weight UMETA(DisplayName = "Weight"),
+	EST_Money UMETA(DisplayName = "Money"),
+	EST_Poison UMETA(DisplayName = "Poison"),
+	EST_Intoxication UMETA(DisplayName = "Intoxication"),
+	EST_TemperatureTolerance UMETA(DisplayName = "Temperature Tolerance"),
+	EST_ProtectionFromCold UMETA(DisplayName = "Protection From Cold"),
+	EST_ProtectionFromHeat UMETA(DisplayName = "Protection From Heat"),
+	EST_Dirtiness UMETA(DisplayName = "Dirtiness"),
+};
+
+UENUM(BlueprintType)
+enum EMathOperation
+{
+	EMO_Add UMETA(DisplayName = "Add"),
+	EMO_Substract UMETA(DisplayName = "Substract"),
+	EMO_Multiply UMETA(DisplayName = "Multiply"),
+	EMO_Divide UMETA(DisplayName = "Divide"),
+};
+
+USTRUCT(BlueprintType)
+struct FEatEffectsAction
+{
+	GENERATED_USTRUCT_BODY();
+
+	UPROPERTY(EditAnywhere)
+	FText EatEffectDisplayName = FText();
+	UPROPERTY(EditAnywhere)
+	TEnumAsByte<EMathOperation> MathOperation = EMO_Add;
+	UPROPERTY(EditAnywhere)
+	TEnumAsByte<EStatusType> StatusToBeAffected = EST_Food;
+	UPROPERTY(EditAnywhere)
+	double ValueForMathOperation = 0.f;
+};
+
+UENUM(BlueprintType)
+enum EDurabilityType
+{
+	EDT_Uses UMETA(DisplayName = "Uses"),
+	EDT_DestroyOverTime UMETA(DisplayName = "Destroy Over Time"),
+};
+
 USTRUCT(BlueprintType)
 struct FBaseItemData : public FTableRowBase
 {
@@ -33,17 +81,24 @@ struct FBaseItemData : public FTableRowBase
 	FText ItemStorageName = FText();
 	UPROPERTY(EditAnywhere)
 	TEnumAsByte<EItemType> ItemType = EIT_Miscellaneous;
+	UPROPERTY(EditAnywhere)
+	TEnumAsByte<EDurabilityType> DurabilityType = EDT_Uses;
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UTexture2D> ItemIcon = nullptr;
-	UPROPERTY(EditAnywhere, meta = (ClampMax = "100.0", ClampMin = "0.0", UIMin = "0.0", UIMax = "100.0"))
+	UPROPERTY(EditAnywhere)
 	float ItemDurability = 0.f;
+	UPROPERTY(EditAnywhere)
+	float ItemInitallDurability = 0.f;
 	UPROPERTY(EditAnywhere)
 	double ItemWeight = 0.f;
 	UPROPERTY(EditAnywhere)
 	float ItemPrice = 0.f;
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class APickableItem> PickableItemClass;
+
+	UPROPERTY(EditAnywhere, meta = (EditCondition = "ItemType == EIT_Food"))
+	TArray<FEatEffectsAction> EatActions;
 	 
 	const bool operator==(const EItemType& OtherItemType) const
 	{

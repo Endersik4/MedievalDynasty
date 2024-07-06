@@ -116,6 +116,7 @@ void UInventoryMenuWidget::UpdatePlayerStatus()
 	if (!IsValid(PlayerStatusComponent))
 		return;
 
+	PlayerStatusComponent->RefreshMoneyValue();
 	const FString MoneyValue = FString::SanitizeFloat(PlayerStatusComponent->GetStatusValue(EST_Money), 0);
 	MoneyDisplayTextBlock->SetText(FText::FromString(MoneyValue));
 

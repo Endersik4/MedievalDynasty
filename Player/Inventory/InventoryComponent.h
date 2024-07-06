@@ -16,6 +16,11 @@ struct FInitiallInventory
 	int32 ItemAmount = 0;
 	UPROPERTY(EditAnywhere)
 	FName ItemRowName = FName();
+
+	const bool operator==(const FName& OtherRowName) const
+	{
+		return ItemRowName == OtherRowName;
+	}
 };
 
 DECLARE_DELEGATE_OneParam(FSelectSubInteractionMenu, int32);

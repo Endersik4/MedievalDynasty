@@ -74,3 +74,15 @@ void UPlayerStatusComponent::RefreshWeightValue()
 	}
 }
 
+void UPlayerStatusComponent::RefreshMoneyValue()
+{
+	if (!IsValid(Player))
+		return;
+
+	const FInitiallInventory* MoneyInInventory = Player->GetInventoryComponent()->GetInventory().FindByKey(MoneyRowNameInDataAsset);
+	if (!MoneyInInventory)
+		return;
+	
+	Money = MoneyInInventory->ItemAmount;
+}
+

@@ -26,6 +26,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	FORCEINLINE TObjectPtr<class USkeletalMeshComponent> GetPlayerSkeletalMesh() const { return PlayerSkeletalMesh; }
 	FORCEINLINE TObjectPtr<class UInventoryComponent> GetInventoryComponent() const {return InventoryComponent;}
 	FORCEINLINE TObjectPtr<class UPlayerStatusComponent> GetPlayerStatusComponent() const {return PlayerStatusComponent;}
 
@@ -47,7 +48,7 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Components")
 	TObjectPtr<class UCapsuleComponent> PlayerCapsuleComponent = nullptr;
 	UPROPERTY(EditDefaultsOnly, Category = "Components")
-	TObjectPtr<class UStaticMeshComponent> PlayerMesh = nullptr;
+	TObjectPtr<class USkeletalMeshComponent> PlayerSkeletalMesh = nullptr;
 	UPROPERTY(EditDefaultsOnly, Category = "Components")
 	TObjectPtr<class USpringArmComponent> SpringArmComponent = nullptr;
 	UPROPERTY(EditDefaultsOnly, Category = "Components")

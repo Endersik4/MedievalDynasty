@@ -60,7 +60,8 @@ class MEDIEVALDYNASTY_API UStatusAndEquipmentWidget : public UUserWidget
 	
 protected:
 	virtual void NativeOnInitialized() override;
-
+	virtual void NativeDestruct() override;
+		
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
 	TObjectPtr<UWrapBox> ShortcutsTextWrapBox = nullptr;
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
@@ -78,6 +79,8 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
 	TObjectPtr<UTileView> EquipmentTileView = nullptr;
+	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
+	TObjectPtr<UImage> RenderedPlayerImage = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
 	TObjectPtr<UTileView> WeaponShortcutsTileView = nullptr;
@@ -92,12 +95,17 @@ private:
 	TArray<FQuickToolSelectEntry> QuickSelectEntries;
 	UPROPERTY(EditDefaultsOnly, Category = "Equipment Settings")
 	TArray<FEquipmentOnPlayer> AllEquipmentsOnPlayer;
-
+	UPROPERTY(EditDefaultsOnly, Category = "Equipment Settings")
+	TSubclassOf<class ARenderOnlyPlayerActor> RenderOnlyPlayerActorClass = nullptr;
 
 	void FillPlayerStatusTileView();
 	void FillWeaponShortcutsTileView();
 	void FillEquipmentTileView();
 
+	void RenderPlayerInWidget();
+
 	UPROPERTY(Transient)
 	TObjectPtr<class AMedievalPlayer> Player = nullptr;
+	UPROPERTY(Transient)
+	TObjectPtr<ARenderOnlyPlayerActor> SpawnedRenderOnlyPlayer = nullptr;
 };

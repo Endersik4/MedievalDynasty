@@ -8,6 +8,7 @@
 #include "QuickSelect/QuickSelectEntryObject.h"
 #include "EquipmentOnPlayer/EquipmentOnPlayerEntryObject.h"
 #include "MedievalDynasty/Player/MedievalPlayer.h"
+#include "EquipmentOnPlayer/RenderOnlyPlayerActor.h"
 
 void UStatusAndEquipmentWidget::NativeOnInitialized()
 {
@@ -18,6 +19,16 @@ void UStatusAndEquipmentWidget::NativeOnInitialized()
 	FillPlayerStatusTileView();
 	FillWeaponShortcutsTileView();
 	FillEquipmentTileView();
+
+	RenderPlayerInWidget();
+}
+
+void UStatusAndEquipmentWidget::NativeDestruct()
+{
+	Super::NativeDestruct();
+
+	if (IsValid(SpawnedRenderOnlyPlayer))
+		SpawnedRenderOnlyPlayer->Destroy();
 }
 
 void UStatusAndEquipmentWidget::FillPlayerStatusTileView()
@@ -63,4 +74,23 @@ void UStatusAndEquipmentWidget::FillEquipmentTileView()
 
 		EquipmentTileView->AddItem(EquipmentOnPlayerObject);
 	}
+}
+
+void UStatusAndEquipmentWidget::RenderPlayerInWidget()
+{
+	if (!IsValid(RenderOnlyPlayerActorClass))
+		return;
+
+	if (!IsValid(Player))
+		return;
+
+	FTransform RenderOnlyPlayerTransform = Player->GetActorTransform();
+	RenderOnlyPlayerTransform.SetRotation(Player->GetPlayerSkeletalMesh()->GetComponentQuat());
+
+	SpawnedRenderOnlyPlayer = GetWorld()->SpawnActor<ARenderOnlyPlayerActor>(RenderOnlyPlayerActorClass, RenderOnlyPlayerTransform);
+	if (!IsValid(SpawnedRenderOnlyPlayer))
+		return;
+
+	SpawnedRenderOnlyPlayer->AttachToComponent(Player->GetPlayerSkeletalMesh(), FAttachmentTransformRules::KeepWorldTransform);
+	SpawnedRenderOnlyPlayer->CaptureOnlyActor(Player);
 }

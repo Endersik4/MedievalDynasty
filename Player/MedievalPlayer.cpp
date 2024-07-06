@@ -5,7 +5,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Camera/CameraComponent.h"
-#include "Components/StaticMeshComponent.h"
+#include "Components/SkeletalMeshComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Net/UnrealNetwork.h"
@@ -21,8 +21,8 @@ AMedievalPlayer::AMedievalPlayer()
 	RootComponent = PlayerCapsuleComponent;
 	PlayerCapsuleComponent->SetSimulatePhysics(true);
 
-	PlayerMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Player Mesh"));
-	PlayerMesh->SetupAttachment(RootComponent);
+	PlayerSkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Player Skeletal Mesh"));
+	PlayerSkeletalMesh->SetupAttachment(RootComponent);
 
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("Spring Arm Component"));
 	SpringArmComponent->SetupAttachment(RootComponent);
@@ -155,7 +155,7 @@ void AMedievalPlayer::RotateMeshTowardsCameraDir(float Delta)
 		return;
 
 	FRotator PlayerRot(0.f);
-	PlayerRot.Yaw = PlayerMesh->GetComponentRotation().Yaw;
+	PlayerRot.Yaw = PlayerSkeletalMesh->GetComponentRotation().Yaw;
 	TargetRotationToRotate.Yaw = GetCurrentYawMoveDirection();
 	FRotator NewRot = UKismetMathLibrary::RInterpTo(PlayerRot, TargetRotationToRotate, Delta, 7.f);
 	
@@ -189,7 +189,7 @@ void AMedievalPlayer::SetPlayerRotation(FRotator NewRotation)
 {
 	if (GetLocalRole() == ENetRole::ROLE_Authority)
 	{
-		PlayerMesh->SetWorldRotation(NewRotation);
+		PlayerSkeletalMesh->SetWorldRotation(NewRotation);
 		ReplicatedRotation = NewRotation;
 
 		UpdateRotationOnClients();
@@ -202,7 +202,7 @@ void AMedievalPlayer::SetPlayerRotation(FRotator NewRotation)
 
 void AMedievalPlayer::UpdateRotationOnClients()
 {
-	PlayerMesh->SetWorldRotation(ReplicatedRotation);
+	PlayerSkeletalMesh->SetWorldRotation(ReplicatedRotation);
 }
 
 void AMedievalPlayer::ServerSetPlayerRotation_Implementation(FRotator NewRotation)

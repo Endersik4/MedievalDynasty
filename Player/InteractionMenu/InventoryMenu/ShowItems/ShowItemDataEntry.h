@@ -14,6 +14,9 @@ class MEDIEVALDYNASTY_API UShowItemDataEntry : public UUserWidget, public IUserO
 {
 	GENERATED_BODY()
 
+public:
+	void DeselectShowItemEntry();
+
 protected:
 	virtual void NativeOnInitialized() override;
 	virtual void NativeOnListItemObjectSet(UObject* ListItemObject) override;
@@ -44,6 +47,8 @@ protected:
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Show Item Data Settings")
 	FSlateColor OnHoveredFontColor = FSlateColor();
+	UPROPERTY(EditDefaultsOnly, Category = "Show Item Data Settings")
+	FButtonStyle ItemSelectedButtonStyle = FButtonStyle();
 
 	void UpdateItemDisplayInformations();
 
@@ -54,5 +59,6 @@ private:
 
 	UPROPERTY(Transient)
 	FSlateColor OriginalTextColor = FSlateColor();
-
+	UPROPERTY(Transient)
+	FButtonStyle OriginalSelectItemButtonStyle = FButtonStyle();
 };

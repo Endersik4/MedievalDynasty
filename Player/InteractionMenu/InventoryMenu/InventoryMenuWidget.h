@@ -51,6 +51,8 @@ public:
 	void UpdateCategoryDisplayText(const FText& NewCategoryDisplayText);
 	void UpdateCategory(TObjectPtr<class USelectCategoryInventoryEntry> NewCurrentSelectedCategoryEntry);
 
+	void SetSelectedShowItemDataEntry(TObjectPtr<class UShowItemDataEntry> NewSelectedShowItemDataEntry);
+
 	UFUNCTION()
 	void OnClicked_ShowItemDataEntry(class UShowItemDataObject* Item);
 
@@ -114,9 +116,13 @@ private:
 	UPROPERTY(Transient)
 	FSlateColor OriginalWeightColor = FSlateColor();
 
+	UPROPERTY(Transient)
+	bool bFirstTimeSort = true;
 	// when inventory is spawned then sort items by name
 	void SortItemsByNameDescending();
-
+	
+	UPROPERTY(Transient)
+	TObjectPtr<class UShowItemDataEntry> SelectedShowItemDataEntry = nullptr;
 	UPROPERTY(Transient)
 	TObjectPtr<class USelectCategoryInventoryEntry> CurrentSelectedCategoryEntry = nullptr;
 	UPROPERTY(Transient)

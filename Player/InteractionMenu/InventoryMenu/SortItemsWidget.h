@@ -21,8 +21,10 @@ public:
 
 	FORCEINLINE void SetInventoryMenuWidget(TObjectPtr<class UInventoryMenuWidget> NewInventoryMenuWidget) { InventoryMenuWidget = NewInventoryMenuWidget; }
 
-	void SortItems(auto LambdaToSortItems);
+	void SortItems(const auto& LambdaToSortItems);
 
+	UPROPERTY(Transient)
+	TFunction<bool(const TObjectPtr<UShowItemDataObject>& FirstItem, const TObjectPtr<UShowItemDataObject>& SecondItem)> SavedSortFunction;
 
 protected:
 	virtual void NativeOnInitialized() override;

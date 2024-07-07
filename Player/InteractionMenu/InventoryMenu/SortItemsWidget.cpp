@@ -25,7 +25,7 @@ void USortItemsWidget::OnClicked_SortItemNameButton()
 	{
 		auto SortNameLambda = [](const TObjectPtr<UShowItemDataObject>& FirstItem, const TObjectPtr<UShowItemDataObject>& SecondItem)
 			{return FirstItem->ItemData.ItemDisplayText.ToString() > SecondItem->ItemData.ItemDisplayText.ToString(); };
-
+		
 		SortItems(SortNameLambda);
 	}
 	else
@@ -103,13 +103,14 @@ void USortItemsWidget::OnClicked_SortItemPriceButton()
 	bSortAscendingItemPrice = !bSortAscendingItemPrice;
 }
 
-void USortItemsWidget::SortItems(auto LambdaToSortItems)
+void USortItemsWidget::SortItems(const auto& LambdaToSortItems)
 {
 	if (!IsValid(InventoryMenuWidget))
 		return;
 
 	if (InventoryMenuWidget->GetCategoryInventoryListView()->GetNumItems() == 0)
 		return;
+	SavedSortFunction = LambdaToSortItems;
 
 	TArray<TObjectPtr<UShowItemDataObject>> AllInventoryItems;
 	for (TObjectPtr<UObject> CurrentItem : InventoryMenuWidget->GetCategoryInventoryListView()->GetListItems())
@@ -125,6 +126,7 @@ void USortItemsWidget::SortItems(auto LambdaToSortItems)
 	}
 
 	AllInventoryItems.Sort(LambdaToSortItems);
-	AllInventoryItems[0]->bInitallySelectedItem = true;
+	if (AllInventoryItems.Num() > 0)
+		AllInventoryItems[0]->bInitallySelectedItem = true;
 	InventoryMenuWidget->GetCategoryInventoryListView()->SetListItems(AllInventoryItems);
 }

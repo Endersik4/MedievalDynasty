@@ -14,6 +14,7 @@
 #include "MedievalDynasty/Player/Components/PlayerStatusComponent.h"
 #include "SelectCategory/SelectCategoryEntryObject.h"
 #include "ShowItems/ShowItemDataObject.h"
+#include "ShowItems/ShowItemDataEntry.h"
 #include "SelectCategory/SelectCategoryInventoryEntry.h"
 #include "DetailedItemInfoWidget.h"
 #include "SortItemsWidget.h"
@@ -89,7 +90,15 @@ void UInventoryMenuWidget::UpdateInventory(bool bDivideWithCategory, EItemType C
 		CategoryInventoryListView->AddItem(SpawnedShowItemObject);
 	}
 
-	SortItemsByNameDescending();
+	if (bFirstTimeSort)
+	{
+		SortItemsByNameDescending();
+		bFirstTimeSort = false;
+	}
+	else if(IsValid(SortItemsWidget))
+	{
+		SortItemsWidget->SortItems(SortItemsWidget->SavedSortFunction);
+	}
 }
 
 void UInventoryMenuWidget::UpdateCategoryDisplayText(const FText& NewCategoryDisplayText)
@@ -152,6 +161,14 @@ void UInventoryMenuWidget::SortItemsByNameDescending()
 		{return FirstItem->ItemData.ItemDisplayText.ToString() < SecondItem->ItemData.ItemDisplayText.ToString(); };
 
 	SortItemsWidget->SortItems(SortNameLambda);
+}
+
+void UInventoryMenuWidget::SetSelectedShowItemDataEntry(TObjectPtr<class UShowItemDataEntry> NewSelectedShowItemDataEntry)
+{
+	if (IsValid(SelectedShowItemDataEntry))
+		SelectedShowItemDataEntry->DeselectShowItemEntry();
+
+	SelectedShowItemDataEntry = NewSelectedShowItemDataEntry;
 }
 
 #pragma region /////////// DETAILED INFORMATION ABOUT ITEM ///////////////

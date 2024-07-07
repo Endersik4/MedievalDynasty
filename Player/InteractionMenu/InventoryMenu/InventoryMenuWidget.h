@@ -109,6 +109,7 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Inventory Settings")
 	FSlateColor WeightColorWhenExceeded = FSlateColor(FColor::Red);
 
+
 	void FillSelectCategoryInventoryTileView();
 
 	void UpdatePlayerStatus();
@@ -120,7 +121,7 @@ private:
 	bool bFirstTimeSort = true;
 	// when inventory is spawned then sort items by name
 	void SortItemsByNameDescending();
-	
+
 	UPROPERTY(Transient)
 	TObjectPtr<class UShowItemDataEntry> SelectedShowItemDataEntry = nullptr;
 	UPROPERTY(Transient)

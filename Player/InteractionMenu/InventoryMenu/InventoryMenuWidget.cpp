@@ -99,6 +99,7 @@ void UInventoryMenuWidget::UpdateInventory(bool bDivideWithCategory, EItemType C
 	{
 		SortItemsWidget->SortItems(SortItemsWidget->SavedSortFunction);
 	}
+
 }
 
 void UInventoryMenuWidget::UpdateCategoryDisplayText(const FText& NewCategoryDisplayText)

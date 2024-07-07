@@ -23,7 +23,6 @@ public:
 
 	void SortItems(const auto& LambdaToSortItems);
 
-	UPROPERTY(Transient)
 	TFunction<bool(const TObjectPtr<UShowItemDataObject>& FirstItem, const TObjectPtr<UShowItemDataObject>& SecondItem)> SavedSortFunction;
 
 protected:

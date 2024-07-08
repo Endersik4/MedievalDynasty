@@ -16,9 +16,27 @@ class MEDIEVALDYNASTY_API UEquipmentOnPlayerEntry : public UUserWidget, public I
 {
 	GENERATED_BODY()
 	
+public:
+	void HighlightEquipment(bool bHighlight = true);
+
 protected:
+	virtual void NativeOnInitialized() override;
 	virtual void NativeOnListItemObjectSet(UObject* ListItemObject) override;
 
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
 	TObjectPtr<class UButton> EquipmentOnPlayerButton = nullptr;
+	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
+	TObjectPtr<class UImage> EquipmentIconImage = nullptr;
+
+	UFUNCTION()
+	void OnHovered_EquipmentPlayerButton();
+
+private:
+	UPROPERTY(EditDefaultsOnly, Category = "Equipment On Player Settings")
+	FButtonStyle OccupiedEquipmentButtonStyle = FButtonStyle();
+	UPROPERTY(EditDefaultsOnly, Category = "Equipment On Player Settings")
+	FButtonStyle HighlightedOccupiedEquipmentButtonStyle = FButtonStyle();
+
+	UPROPERTY(Transient)
+	TObjectPtr<class UEquipmentOnPlayerEntryObject> EquipmentOnPlayerEntryObject = nullptr;
 };

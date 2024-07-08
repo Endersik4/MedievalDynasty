@@ -5,11 +5,10 @@
 #include "Components/Button.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
-#include "Blueprint/WidgetLayoutLibrary.h"
-#include "Kismet/KismetMathLibrary.h"
 
 #include "ShowItemDataObject.h"
 #include "MedievalDynasty/Player/InteractionMenu/InventoryMenu/InventoryMenuWidget.h"
+#include "MedievalDynasty/Player/InteractionMenu/InventoryMenu/StatusAndEquipment/DragItemWidget.h"
 
 void UShowItemDataEntry::NativeOnInitialized()
 {
@@ -17,70 +16,9 @@ void UShowItemDataEntry::NativeOnInitialized()
 
 	SelectItemButton->OnPressed.AddDynamic(this, &UShowItemDataEntry::OnPressed_SelectItemButton);
 	SelectItemButton->OnReleased.AddDynamic(this, &UShowItemDataEntry::OnReleased_SelectItemButton);
-	SelectItemButton->OnHovered.AddDynamic(this, &UShowItemDataEntry::OnHovered_SelectItemButton);
-	SelectItemButton->OnUnhovered.AddDynamic(this, &UShowItemDataEntry::OnUnhovered_SelectItemButton);
 
 	OriginalTextColor = ItemAmountTextBlock->GetColorAndOpacity();
 	OriginalSelectItemButtonStyle = SelectItemButton->GetStyle();
-	ItemMovingIconImage->SetVisibility(ESlateVisibility::Collapsed);
-
-	OriginalMovingItemImagePosition = ItemMovingIconImage->GetRenderTransform().Translation;
-}
-
-void UShowItemDataEntry::NativeTick(const FGeometry& MyGeometry, float Delta)
-{
-	Super::NativeTick(MyGeometry, Delta);
-
-
-	if (!CheckIfCanStartMovingItem())
-		return;
-
-	MovingItemIcon(MyGeometry, Delta);
-}
-
-bool UShowItemDataEntry::CheckIfCanStartMovingItem()
-{
-	if (!bCanStartMovingItem)
-		return true;
-
-	if (UKismetMathLibrary::EqualEqual_Vector2DVector2D(UWidgetLayoutLibrary::GetMousePositionOnPlatform(), CursorLocationWhenPressed, CursorDistanceToStartMovingItem))
-	{ 
-		return false;
-	}
-
-	ItemMovingIconImage->SetVisibility(ESlateVisibility::HitTestInvisible);
-	bMovingItemIcon = true;
-	MoveItemIconToCursorTimeElapsed = 0.f;
-
-	bCanStartMovingItem = false;
-
-	return true;
-}
-
-
-void UShowItemDataEntry::MovingItemIcon(const FGeometry& MyGeometry, float Delta)
-{
-	if (!bMovingItemIcon)
-		return;
-
-	const FVector2D LocalMousePosition = MyGeometry.AbsoluteToLocal(UWidgetLayoutLibrary::GetMousePositionOnPlatform());
-
-	if (bIgnoreSmoothItemMoving)
-	{
-		ItemMovingIconImage->SetRenderTranslation(LocalMousePosition);
-		return;
-	}
-
-	if (MoveItemIconToCursorTimeElapsed <= MoveItemIconToCursorTime)
-	{
-		const FVector2D NewItemMovingIconPosition = FMath::Lerp(OriginalMovingItemImagePosition, LocalMousePosition, MoveItemIconToCursorTimeElapsed / MoveItemIconToCursorTime);
-		ItemMovingIconImage->SetRenderTranslation(NewItemMovingIconPosition);
-		MoveItemIconToCursorTimeElapsed += Delta;
-	}
-	else
-	{
-		bIgnoreSmoothItemMoving = true;
-	}
 }
 
 void UShowItemDataEntry::NativeOnListItemObjectSet(UObject* ListItemObject)
@@ -99,6 +37,7 @@ void UShowItemDataEntry::NativeOnListItemObjectSet(UObject* ListItemObject)
 	}
 
 	UpdateItemDisplayInformations();
+
 }
 
 void UShowItemDataEntry::UpdateItemDisplayInformations()
@@ -107,10 +46,7 @@ void UShowItemDataEntry::UpdateItemDisplayInformations()
 		return;
 
 	if (IsValid(ShowItemDataObject->ItemData.ItemIcon))
-	{
 		ItemIconImage->SetBrushFromTexture(ShowItemDataObject->ItemData.ItemIcon);
-		ItemMovingIconImage->SetBrushFromTexture(ShowItemDataObject->ItemData.ItemIcon);
-	}
 	
 	ItemNameTextBlock->SetText(ShowItemDataObject->ItemData.ItemDisplayText);
 	ItemAmountTextBlock->SetText(FText::AsNumber(ShowItemDataObject->ItemAmount));
@@ -121,6 +57,7 @@ void UShowItemDataEntry::UpdateItemDisplayInformations()
 	ItemWeightTextBlock->SetText(FText::AsNumber(ShowItemDataObject->ItemData.ItemWeight * ShowItemDataObject->ItemAmount));
 
 	ItemPriceTextBlock->SetText(FText::AsNumber(ShowItemDataObject->ItemData.ItemPrice));
+
 }
 
 void UShowItemDataEntry::OnPressed_SelectItemButton()
@@ -131,38 +68,42 @@ void UShowItemDataEntry::OnPressed_SelectItemButton()
 	if (!IsValid(ShowItemDataObject->InventoryMenuWidget))
 		return;
 
-	ShowItemDataObject->InventoryMenuWidget->OnClicked_ShowItemDataEntry(ShowItemDataObject);
-	ShowItemDataObject->InventoryMenuWidget->SetSelectedShowItemDataEntry(this);
-	ChangeFontColorToAllTextes(OnHoveredFontColor);
-	SelectItemButton->SetStyle(ItemSelectedButtonStyle);
+	if (!ShowItemDataObject->bItemSelected)
+	{
+		ShowItemDataObject->InventoryMenuWidget->OnClicked_ShowItemDataEntry(ShowItemDataObject);
+		ShowItemDataObject->InventoryMenuWidget->SetSelectedShowItemDataEntry(this);
+		ChangeFontColorToAllTextes(OnHoveredFontColor);
+		SelectItemButton->SetStyle(ItemSelectedButtonStyle);
 
-	CursorLocationWhenPressed = UWidgetLayoutLibrary::GetMousePositionOnPlatform();
-	bCanStartMovingItem = true;
+		if (ShowItemDataObject->ItemData.EquipmentType != EET_None)
+		{
+			ShowItemDataObject->InventoryMenuWidget->HighlightEquipmentOnPlayer(true, ShowItemDataObject->ItemData);
+		}
+
+		ShowItemDataObject->bItemSelected = true;
+	}
+	
+	ShowItemDataObject->InventoryMenuWidget->GetDraggingItemWidget()->StartDraggingItem(ShowItemDataObject->ItemData, GetTickSpaceGeometry().LocalToAbsolute(ItemIconImage->GetRenderTransform().Translation));
 }
 
 void UShowItemDataEntry::OnReleased_SelectItemButton()
 {
-	bCanStartMovingItem = false;
-	bMovingItemIcon = false;
-	bIgnoreSmoothItemMoving = false;
-	ItemMovingIconImage->SetVisibility(ESlateVisibility::Collapsed);
-	ItemMovingIconImage->SetRenderTranslation(OriginalMovingItemImagePosition);
-}
-
-void UShowItemDataEntry::OnHovered_SelectItemButton()
-{
-	;
-}
-
-void UShowItemDataEntry::OnUnhovered_SelectItemButton()
-{
-	;
+	ShowItemDataObject->InventoryMenuWidget->GetDraggingItemWidget()->StopDraggingItem();
 }
 
 void UShowItemDataEntry::DeselectShowItemEntry()
 {
 	ChangeFontColorToAllTextes(OriginalTextColor);
 	SelectItemButton->SetStyle(OriginalSelectItemButtonStyle);
+	ShowItemDataObject->bItemSelected = false;
+
+	if (!IsValid(ShowItemDataObject))
+		return;
+
+	if (ShowItemDataObject->ItemData.EquipmentType != EET_None)
+	{
+		ShowItemDataObject->InventoryMenuWidget->HighlightEquipmentOnPlayer(false, ShowItemDataObject->ItemData);
+	}
 }
 
 void UShowItemDataEntry::ChangeFontColorToAllTextes(const FSlateColor& NewColor)

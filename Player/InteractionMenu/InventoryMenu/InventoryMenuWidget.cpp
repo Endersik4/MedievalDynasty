@@ -18,10 +18,16 @@
 #include "SelectCategory/SelectCategoryInventoryEntry.h"
 #include "DetailedItemInfoWidget.h"
 #include "SortItemsWidget.h"
+#include "StatusAndEquipment/StatusAndEquipmentWidget.h"
+#include "StatusAndEquipment/DragItemWidget.h"
 
 void UInventoryMenuWidget::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
+
+	Player = Cast<AMedievalPlayer>(GetOwningPlayerPawn());
+	if (IsValid(Player))
+		PlayerInventoryComponent = Player->GetInventoryComponent();
 
 	DetailedItemInfoWidget->SetVisibility(ESlateVisibility::Hidden);
 	OriginalWeightColor = WeightDisplayTextBlock->GetColorAndOpacity();
@@ -29,15 +35,19 @@ void UInventoryMenuWidget::NativeOnInitialized()
 	if (IsValid(SortItemsWidget))
 		SortItemsWidget->SetInventoryMenuWidget(this);
 
-	Player = Cast<AMedievalPlayer>(GetOwningPlayerPawn());
-	if (IsValid(Player))
-		PlayerInventoryComponent = Player->GetInventoryComponent();
-	
 	FillSelectCategoryInventoryTileView();
 
 	UpdatePlayerStatus();
+
+	if (IsValid(StatusAndEquipmentWidget))
+	{
+		StatusAndEquipmentWidget->SetInventoryMenuWidget(this);
+		StatusAndEquipmentWidget->FillWeaponShortcutsTileView();
+		StatusAndEquipmentWidget->FillEquipmentTileView();
+	}
 }
 
+#pragma region //////// CATEGORY /////////////
 void UInventoryMenuWidget::FillSelectCategoryInventoryTileView()
 {
 	for (const FCategoryInventory& CurrentSelectCategory : AllCategoryToDivideItems)
@@ -58,6 +68,23 @@ void UInventoryMenuWidget::FillSelectCategoryInventoryTileView()
 	}
 }
 
+void UInventoryMenuWidget::UpdateCategoryDisplayText(const FText& NewCategoryDisplayText)
+{
+	CategoryDisplayName->SetText(NewCategoryDisplayText);
+}
+
+void UInventoryMenuWidget::UpdateCategory(TObjectPtr<class USelectCategoryInventoryEntry> NewCurrentSelectedCategoryEntry)
+{
+	if (IsValid(CurrentSelectedCategoryEntry))
+		CurrentSelectedCategoryEntry->ActivateCategoryEntry(false);
+
+	CurrentSelectedCategoryEntry = NewCurrentSelectedCategoryEntry;
+
+	DetailedItemInfoWidget->SetVisibility(ESlateVisibility::Hidden);
+}
+#pragma endregion
+
+#pragma region ////////////// INVENTORY //////////////
 void UInventoryMenuWidget::UpdateInventory(bool bDivideWithCategory, EItemType CategoryTypeToDivide)
 {
 	if (!IsValid(PlayerInventoryComponent))
@@ -99,24 +126,21 @@ void UInventoryMenuWidget::UpdateInventory(bool bDivideWithCategory, EItemType C
 	{
 		SortItemsWidget->SortItems(SortItemsWidget->SavedSortFunction);
 	}
-
 }
 
-void UInventoryMenuWidget::UpdateCategoryDisplayText(const FText& NewCategoryDisplayText)
+void UInventoryMenuWidget::SortItemsByNameDescending()
 {
-	CategoryDisplayName->SetText(NewCategoryDisplayText);
+	if (!IsValid(SortItemsWidget))
+		return;
+
+	auto SortNameLambda = [](const TObjectPtr<UShowItemDataObject>& FirstItem, const TObjectPtr<UShowItemDataObject>& SecondItem)
+		{return FirstItem->ItemData.ItemDisplayText.ToString() < SecondItem->ItemData.ItemDisplayText.ToString(); };
+
+	SortItemsWidget->SortItems(SortNameLambda);
 }
+#pragma endregion
 
-void UInventoryMenuWidget::UpdateCategory(TObjectPtr<class USelectCategoryInventoryEntry> NewCurrentSelectedCategoryEntry)
-{
-	if (IsValid(CurrentSelectedCategoryEntry))
-		CurrentSelectedCategoryEntry->ActivateCategoryEntry(false);
-
-	CurrentSelectedCategoryEntry = NewCurrentSelectedCategoryEntry;
-
-	DetailedItemInfoWidget->SetVisibility(ESlateVisibility::Hidden);
-}
-
+#pragma region ///////// PLAYER STATUS /////////
 void UInventoryMenuWidget::UpdatePlayerStatus()
 {
 	if (!IsValid(Player))
@@ -152,17 +176,7 @@ void UInventoryMenuWidget::UpdateWeight(TObjectPtr<class UPlayerStatusComponent>
 	else
 		WeightDisplayTextBlock->SetColorAndOpacity(OriginalWeightColor);
 }
-
-void UInventoryMenuWidget::SortItemsByNameDescending()
-{
-	if (!IsValid(SortItemsWidget))
-		return;
-
-	auto SortNameLambda = [](const TObjectPtr<UShowItemDataObject>& FirstItem, const TObjectPtr<UShowItemDataObject>& SecondItem)
-		{return FirstItem->ItemData.ItemDisplayText.ToString() < SecondItem->ItemData.ItemDisplayText.ToString(); };
-
-	SortItemsWidget->SortItems(SortNameLambda);
-}
+#pragma endregion
 
 void UInventoryMenuWidget::SetSelectedShowItemDataEntry(TObjectPtr<class UShowItemDataEntry> NewSelectedShowItemDataEntry)
 {
@@ -170,6 +184,14 @@ void UInventoryMenuWidget::SetSelectedShowItemDataEntry(TObjectPtr<class UShowIt
 		SelectedShowItemDataEntry->DeselectShowItemEntry();
 
 	SelectedShowItemDataEntry = NewSelectedShowItemDataEntry;
+}
+
+void UInventoryMenuWidget::HighlightEquipmentOnPlayer(bool bHighlight, const FBaseItemData& ItemToCheck)
+{
+	if (!IsValid(StatusAndEquipmentWidget))
+		return;
+
+	StatusAndEquipmentWidget->HighlightEquipmentOnPlayer(bHighlight, ItemToCheck);
 }
 
 #pragma region /////////// DETAILED INFORMATION ABOUT ITEM ///////////////

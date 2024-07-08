@@ -20,5 +20,9 @@ public:
 	UPROPERTY(EditAnywhere)
 	FEquipmentOnPlayer EquipmentOnPlayer;
 	UPROPERTY(EditAnywhere)
+	bool bOccupied = false;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<class UInventoryMenuWidget> InventoryMenuWidget = nullptr;
+	UPROPERTY(EditAnywhere)
 	TObjectPtr<class AMedievalPlayer> Player = nullptr;
 };

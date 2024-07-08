@@ -26,4 +26,6 @@ public:
 	TObjectPtr<class UInventoryMenuWidget> InventoryMenuWidget = nullptr;
 	UPROPERTY(EditAnywhere)
 	bool bInitallySelectedItem = false;
+	UPROPERTY(EditAnywhere)
+	bool bItemSelected = false;
 };

@@ -21,5 +21,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	FQuickToolSelectEntry QuickSelectEntry;
 	UPROPERTY(EditAnywhere)
+	TObjectPtr<class UInventoryMenuWidget> InventoryMenuWidget = nullptr;
+	UPROPERTY(EditAnywhere)
 	TObjectPtr<class AMedievalPlayer> Player = nullptr;
 };

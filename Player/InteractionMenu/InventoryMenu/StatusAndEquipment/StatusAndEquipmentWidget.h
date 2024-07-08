@@ -48,6 +48,10 @@ struct FEquipmentOnPlayer
 
 	UPROPERTY(EditAnywhere)
 	FButtonStyle EquipmentButtonStyle = FButtonStyle();
+	UPROPERTY(EditAnywhere)
+	FButtonStyle HighlightedEquipmentButtonStyle = FButtonStyle();
+	UPROPERTY(EditAnywhere)
+	TEnumAsByte<EEquipmentType> CanEquipOnlyEquipmentType = EET_ArmWear;
 };
 
 
@@ -60,6 +64,14 @@ class MEDIEVALDYNASTY_API UStatusAndEquipmentWidget : public UUserWidget
 {
 	GENERATED_BODY()
 	
+public:
+	void FillWeaponShortcutsTileView();
+	void FillEquipmentTileView();
+
+	void HighlightEquipmentOnPlayer(bool bHighlight, const FBaseItemData& ItemToCheck);
+
+	FORCEINLINE void SetInventoryMenuWidget(TObjectPtr<class UInventoryMenuWidget> NewInventoryMenuWidget) { InventoryMenuWidget = NewInventoryMenuWidget; }
+
 protected:
 	virtual void NativeOnInitialized() override;
 	virtual void NativeDestruct() override;
@@ -103,13 +115,15 @@ private:
 	TSubclassOf<class ARenderOnlyPlayerActor> RenderOnlyPlayerActorClass = nullptr;
 
 	void FillPlayerStatusTileView();
-	void FillWeaponShortcutsTileView();
-	void FillEquipmentTileView();
 
 	void RenderPlayerInWidget();
 
 	UPROPERTY(Transient)
+	TObjectPtr<class UEquipmentOnPlayerEntry> HighlightedEquipmentOnPlayer = nullptr;
+	UPROPERTY(Transient)
 	TObjectPtr<class AMedievalPlayer> Player = nullptr;
+	UPROPERTY(Transient)
+	TObjectPtr<class UInventoryMenuWidget> InventoryMenuWidget = nullptr;
 	UPROPERTY(Transient)
 	TObjectPtr<ARenderOnlyPlayerActor> SpawnedRenderOnlyPlayer = nullptr;
 };

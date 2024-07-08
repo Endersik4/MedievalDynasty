@@ -53,10 +53,13 @@ public:
 
 	void SetSelectedShowItemDataEntry(TObjectPtr<class UShowItemDataEntry> NewSelectedShowItemDataEntry);
 
+	void HighlightEquipmentOnPlayer(bool bHighLight, const FBaseItemData& ItemToCheck);
+
 	UFUNCTION()
 	void OnClicked_ShowItemDataEntry(class UShowItemDataObject* Item);
 
 	FORCEINLINE TObjectPtr<class UListView> GetCategoryInventoryListView() const {return CategoryInventoryListView;}
+	FORCEINLINE TObjectPtr<class UDragItemWidget> GetDraggingItemWidget() const {return DraggingItemWidget;}
 
 	FORCEINLINE void SetPlayerInventoryComponent(TObjectPtr<class UInventoryComponent> NewInventoryComponent) { PlayerInventoryComponent = NewInventoryComponent; }
 
@@ -101,6 +104,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
 	TObjectPtr<class UStatusAndEquipmentWidget> StatusAndEquipmentWidget = nullptr;
 
+	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
+	TObjectPtr<class UDragItemWidget> DraggingItemWidget = nullptr;
+
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Inventory Settings")
 	TEnumAsByte<EItemType> InitiallCategoryType = EIT_None;
@@ -108,7 +114,6 @@ private:
 	TArray<FCategoryInventory> AllCategoryToDivideItems = {FCategoryInventory()};
 	UPROPERTY(EditDefaultsOnly, Category = "Inventory Settings")
 	FSlateColor WeightColorWhenExceeded = FSlateColor(FColor::Red);
-
 
 	void FillSelectCategoryInventoryTileView();
 
@@ -121,6 +126,7 @@ private:
 	bool bFirstTimeSort = true;
 	// when inventory is spawned then sort items by name
 	void SortItemsByNameDescending();
+
 
 	UPROPERTY(Transient)
 	TObjectPtr<class UShowItemDataEntry> SelectedShowItemDataEntry = nullptr;

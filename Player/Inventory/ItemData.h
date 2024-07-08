@@ -19,6 +19,19 @@ enum EItemType
 };
 
 UENUM(BlueprintType)
+enum EEquipmentType
+{
+	EET_None UMETA(DisplayName = "None"),
+	EET_ChestWear UMETA(DisplayName = "Chest Wear"),
+	EET_HeadWear UMETA(DisplayName = "Head Wear"),
+	EET_ArmWear UMETA(DisplayName = "Arm Wear"),
+	EET_LegWear UMETA(DisplayName = "Leg Wear"),
+	EET_FootWear UMETA(DisplayName = "Foot Wear"),
+	EET_Torch UMETA(DisplayName = "Torch"),
+	EET_Arrows UMETA(DisplayName = "Arrows"),
+};
+
+UENUM(BlueprintType)
 enum EStatusType
 {
 	EST_Health UMETA(DisplayName = "Health"),
@@ -97,8 +110,10 @@ struct FBaseItemData : public FTableRowBase
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class APickableItem> PickableItemClass;
 
-	UPROPERTY(EditAnywhere, meta = (EditCondition = "ItemType == EIT_Food"))
+	UPROPERTY(EditAnywhere, meta = (EditCondition = "ItemType == EItemType::EIT_Food", EditConditionHides))
 	TArray<FEatEffectsAction> EatActions;
+	UPROPERTY(EditAnywhere, meta = (EditCondition = "ItemType == EItemType::EIT_Tools || ItemType == EItemType::EIT_Cloth", EditConditionHides))
+	TEnumAsByte<EEquipmentType> EquipmentType = EET_None;
 	 
 	const bool operator==(const EItemType& OtherItemType) const
 	{

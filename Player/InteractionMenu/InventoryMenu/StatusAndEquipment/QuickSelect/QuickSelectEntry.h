@@ -16,12 +16,26 @@ class MEDIEVALDYNASTY_API UQuickSelectEntry : public UUserWidget, public IUserOb
 	GENERATED_BODY()
 	
 protected:
+	virtual void NativeOnInitialized() override;
+
 	virtual void NativeOnListItemObjectSet(UObject* ListItemObject) override;
 
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
 	TObjectPtr<class UButton> QuickSelectButton = nullptr;
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
-	TObjectPtr<class UImage> ToolImage = nullptr;
+	TObjectPtr<class UImage> ToolIconImage = nullptr;
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
 	TObjectPtr<class UTextBlock> QuickSelectNumberText = nullptr;
+
+	UFUNCTION()
+	void OnHovered_QuickSelectButton();
+	UFUNCTION()
+	void OnUnhovered_QuickSelectButton();
+
+private:
+	UPROPERTY(EditDefaultsOnly, Category = "Quick Select Settings")
+	TEnumAsByte<EItemType> CanEquipOnlyItemType = EIT_Tools;
+
+	UPROPERTY(Transient)
+	TObjectPtr<class UQuickSelectEntryObject> QuickSelectEntryObject = nullptr;
 };

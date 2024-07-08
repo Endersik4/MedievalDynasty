@@ -127,7 +127,6 @@ private:
 	// when inventory is spawned then sort items by name
 	void SortItemsByNameDescending();
 
-
 	UPROPERTY(Transient)
 	TObjectPtr<class UShowItemDataEntry> SelectedShowItemDataEntry = nullptr;
 	UPROPERTY(Transient)

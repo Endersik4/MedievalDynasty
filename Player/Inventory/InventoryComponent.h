@@ -15,6 +15,8 @@ struct FInitiallInventory
 	UPROPERTY(EditAnywhere)
 	int32 ItemAmount = 0;
 	UPROPERTY(EditAnywhere)
+	bool bIsItemInUse = false;
+	UPROPERTY(EditAnywhere)
 	FName ItemRowName = FName();
 
 	const bool operator==(const FName& OtherRowName) const

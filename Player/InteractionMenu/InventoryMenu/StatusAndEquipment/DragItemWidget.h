@@ -22,6 +22,8 @@ public:
 	FORCEINLINE FBaseItemData GetCurrentDragingItem() const { return CurrentDragingItem; }
 	FORCEINLINE bool GetIsDraggingItem() const { return bIsDraggingItem; }
 
+	TFunction<void()> ItemFoundNewSlotFunc;
+
 protected:
 	virtual void NativeOnInitialized() override;
 

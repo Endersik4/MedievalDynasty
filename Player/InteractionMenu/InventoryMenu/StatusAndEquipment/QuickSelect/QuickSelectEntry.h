@@ -28,9 +28,16 @@ protected:
 	TObjectPtr<class UTextBlock> QuickSelectNumberText = nullptr;
 
 	UFUNCTION()
+	void OnPressed_QuickSelectButton();
+	UFUNCTION()
+	void OnReleased_QuickSelectButton();
+	UFUNCTION()
 	void OnHovered_QuickSelectButton();
 	UFUNCTION()
 	void OnUnhovered_QuickSelectButton();
+
+	UFUNCTION()
+	void ItemFoundNewSlot();
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Quick Select Settings")

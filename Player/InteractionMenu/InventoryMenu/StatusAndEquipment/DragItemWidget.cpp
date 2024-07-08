@@ -98,4 +98,5 @@ void UDragItemWidget::RemoveDragingItem()
 {
 	CurrentDragingItem = FBaseItemData();
 	bIsDraggingItem = false;
+
 }

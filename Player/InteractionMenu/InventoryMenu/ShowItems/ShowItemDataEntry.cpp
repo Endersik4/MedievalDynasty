@@ -34,6 +34,7 @@ void UShowItemDataEntry::NativeOnListItemObjectSet(UObject* ListItemObject)
 	{
 		OnPressed_SelectItemButton();
 		OnReleased_SelectItemButton();
+		ShowItemDataObject->bInitallySelectedItem = false;
 	}
 
 	UpdateItemDisplayInformations();

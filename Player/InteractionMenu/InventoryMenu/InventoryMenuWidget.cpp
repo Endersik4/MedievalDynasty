@@ -87,11 +87,11 @@ void UInventoryMenuWidget::UpdateCategory(TObjectPtr<class USelectCategoryInvent
 #pragma region ////////////// INVENTORY //////////////
 void UInventoryMenuWidget::UpdateInventory(bool bDivideWithCategory, EItemType CategoryTypeToDivide)
 {
-	if (!IsValid(PlayerInventoryComponent))
-		return;
-
 	CategoryInventoryListView->ClearListItems();
 	NoItemsDisplayTextBlock->SetVisibility(ESlateVisibility::HitTestInvisible);
+
+	if (!IsValid(PlayerInventoryComponent))
+		return;
 
 	for (const FInitiallInventory& CurrentItemFromInv : PlayerInventoryComponent->GetInventory())
 	{

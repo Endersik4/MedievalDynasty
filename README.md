@@ -1,7 +1,7 @@
 # MedievalDynasty
  making UI from Medieval Dynasty with COOP (inventory, knowledge, perks etc)
 
-<h2> Current Progress:</h2>
+<h2> Current Progress (6 July 2024):</h2>
 
 ![ScreenShot00000](https://github.com/Endersik4/MedievalDynasty/assets/131354098/fc77bd04-e815-45fc-a814-a847f1d6a711)
 ![ScreenShot00006](https://github.com/Endersik4/MedievalDynasty/assets/131354098/301f66cb-2f76-455c-9b47-b94e0f393d41)

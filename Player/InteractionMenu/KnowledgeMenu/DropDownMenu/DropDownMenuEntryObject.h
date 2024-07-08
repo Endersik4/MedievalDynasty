@@ -18,7 +18,8 @@ public:
 
 	UPROPERTY()
 	FDropDownMenuData DropDownMenuData;
-
+	UPROPERTY()
+	bool bMenuSelected = false;
 	UPROPERTY()
 	TObjectPtr<UKnowledgeWidget> KnowledgeWidget = nullptr;
 	UPROPERTY()

@@ -16,6 +16,9 @@ class MEDIEVALDYNASTY_API UKnowledgeInformationEntry : public UUserWidget, publi
 {
 	GENERATED_BODY()
 
+public:
+	void SelectedKnowledgeInformationEntry(bool bSelected = true);
+
 protected:
 	virtual void NativeOnInitialized() override;
 	virtual void NativeOnListItemObjectSet(UObject* ListItemObject) override;
@@ -26,9 +29,19 @@ protected:
 	TObjectPtr<class UTextBlock> KnowledgeNameText = nullptr;
 
 	UFUNCTION()
-	void OnClicked_KnowledgeInformationButton();
+	void OnPressed_KnowledgeInformationButton();
 
 private:
+	UPROPERTY(EditDefaultsOnly, Category = "Knowledge Information Settings")
+	FButtonStyle SelectedKnowledgeButtonStyle = FButtonStyle();
+	UPROPERTY(EditDefaultsOnly, Category = "Knowledge Information Settings")
+	FSlateColor SelectedKnowledgeFontColor = FSlateColor(FColor::White);
+
 	UPROPERTY(Transient)
 	TObjectPtr<class UKnowledgeInformationEntryObject> KnowledgeInformationEntryObject = nullptr;
+
+	UPROPERTY(Transient)
+	FButtonStyle OriginalKnowledgeButtonStyle = FButtonStyle();
+	UPROPERTY(Transient)
+	FSlateColor OriginalKnowledgeFontColor = FSlateColor();
 };

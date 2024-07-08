@@ -6,12 +6,16 @@
 #include "Components/TextBlock.h"
 
 #include "KnowledgeInformationEntryObject.h"
+#include "MedievalDynasty/Player/InteractionMenu/KnowledgeMenu/DetailedKnowledgeInfoWidget.h"
 
 void UKnowledgeInformationEntry::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
-	KnowledgeInformationButton->OnClicked.AddDynamic(this, &UKnowledgeInformationEntry::OnClicked_KnowledgeInformationButton);
+	OriginalKnowledgeButtonStyle = KnowledgeInformationButton->GetStyle();
+	OriginalKnowledgeFontColor = KnowledgeNameText->GetColorAndOpacity();
+
+	KnowledgeInformationButton->OnPressed.AddDynamic(this, &UKnowledgeInformationEntry::OnPressed_KnowledgeInformationButton);
 }
 
 void UKnowledgeInformationEntry::NativeOnListItemObjectSet(UObject* ListItemObject)
@@ -23,9 +27,43 @@ void UKnowledgeInformationEntry::NativeOnListItemObjectSet(UObject* ListItemObje
 	if (!IsValid(KnowledgeInformationButton))
 		return;
 
-	KnowledgeNameText->SetText(KnowledgeInformationEntryObject->GameKnowledgeDisplayText);
+	SelectedKnowledgeInformationEntry(KnowledgeInformationEntryObject->bKnowledgeSelected);
+
+	KnowledgeNameText->SetText(KnowledgeInformationEntryObject->KnowledgeNameDisplayText);
 }
 
-void UKnowledgeInformationEntry::OnClicked_KnowledgeInformationButton()
+void UKnowledgeInformationEntry::OnPressed_KnowledgeInformationButton()
 {
+	if (!IsValid(KnowledgeInformationEntryObject))
+		return;
+
+	TObjectPtr<UKnowledgeWidget> KnowledgeWidget = KnowledgeInformationEntryObject->KnowledgeWidget;
+	if (!IsValid(KnowledgeWidget))
+		return;
+
+	KnowledgeWidget->SetDeselectEntryFunc([this](bool bSelect) {this->SelectedKnowledgeInformationEntry(bSelect); });
+	SelectedKnowledgeInformationEntry(true);
+
+	KnowledgeWidget->GetDetailedKnowledgeInfoWidget()->UpdateDetailedKnowledgeInformation(KnowledgeInformationEntryObject->KnowledgeRowName, KnowledgeWidget->GetKnowledgeInformationDataAsset());
+}
+
+void UKnowledgeInformationEntry::SelectedKnowledgeInformationEntry(bool bSelected)
+{
+	KnowledgeInformationButton->SetVisibility(bSelected ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Visible);
+
+	if (bSelected)
+	{
+		KnowledgeInformationButton->SetStyle(SelectedKnowledgeButtonStyle);
+		KnowledgeNameText->SetColorAndOpacity(SelectedKnowledgeFontColor);
+	}
+	else
+	{
+		KnowledgeInformationButton->SetStyle(OriginalKnowledgeButtonStyle);
+		KnowledgeNameText->SetColorAndOpacity(OriginalKnowledgeFontColor);
+	}
+
+	if (!IsValid(KnowledgeInformationEntryObject))
+		return;
+
+	KnowledgeInformationEntryObject->bKnowledgeSelected = bSelected;
 }

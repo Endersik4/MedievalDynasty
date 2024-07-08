@@ -8,8 +8,8 @@
 #include "Components/Image.h"
 
 #include "KnowledgeCategory/CategoryKnowledgeEntryObject.h"
-#include "KnowledgeCategory/CategoryKnowledgeEntry.h"
 #include "DropDownMenu/DropDownMenuEntryObject.h"
+#include "MedievalDynasty/Player/InteractionMenu/KnowledgeMenu/DetailedKnowledgeInfoWidget.h"
 
 void UKnowledgeWidget::NativeOnInitialized()
 {
@@ -43,14 +43,6 @@ void UKnowledgeWidget::UpdateCategoryDisplayText(const FText& NewCategoryDisplay
 	CategoryDisplayName->SetText(NewCategoryDisplayText);
 }
 
-void UKnowledgeWidget::UpdateCategory(TObjectPtr<class UCategoryKnowledgeEntry> NewSelectedKnowledgeCategoryEntry)
-{
-	if (IsValid(SelectedKnowledgeCategoryEntry))
-		SelectedKnowledgeCategoryEntry->ActivateCategoryEntry(false);
-
-	SelectedKnowledgeCategoryEntry = NewSelectedKnowledgeCategoryEntry;
-}
-
 void UKnowledgeWidget::FIllKnowledgeTreeView(TObjectPtr<class UCategoryKnowledgeEntryObject> CategoryObjectToFillFrom)
 {
 	if (!IsValid(CategoryObjectToFillFrom))
@@ -69,4 +61,26 @@ void UKnowledgeWidget::FIllKnowledgeTreeView(TObjectPtr<class UCategoryKnowledge
 
 		KnowledgeTreeView->AddItem(DropDownMenuKnowledgeObject);
 	}
+
+	if (DeselectEntryFunc)
+		DeselectEntryFunc(false);
+
+	if (IsValid(DetailedKnowledgeInfoWidget))
+		DetailedKnowledgeInfoWidget->DisableDetailedKnowledgeWidget();
+}
+
+void UKnowledgeWidget::SetDeselectCategoryFunc(TFunction<void(bool)> NewDeselectCategoryFunc)
+{
+	if (DeselectCategoryFunc)
+		DeselectCategoryFunc(false);
+
+	DeselectCategoryFunc = NewDeselectCategoryFunc;
+}
+
+void UKnowledgeWidget::SetDeselectEntryFunc(TFunction<void(bool)> NewDeselectEntryFunc)
+{
+	if (DeselectEntryFunc)
+		DeselectEntryFunc(false);
+
+	DeselectEntryFunc = NewDeselectEntryFunc;
 }

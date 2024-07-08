@@ -16,7 +16,11 @@ void UDropDownMenuEntry::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
-	DropDownMenuButton->OnClicked.AddDynamic(this, &UDropDownMenuEntry::OnClicked_DropDownMenuButton);
+	OriginalMenuButtonStyle = SelectMenuButton->GetStyle();
+	OriginalMenuFontColor = DropDownMenuNameText->GetColorAndOpacity();
+
+	SelectMenuButton->OnPressed.AddDynamic(this, &UDropDownMenuEntry::OnPressed_SelectMenuButton);
+	DropDownMenuButton->OnPressed.AddDynamic(this, &UDropDownMenuEntry::OnPressed_DropDownMenuButton);
 }
 
 void UDropDownMenuEntry::NativeOnListItemObjectSet(UObject* ListItemObject)
@@ -28,14 +32,34 @@ void UDropDownMenuEntry::NativeOnListItemObjectSet(UObject* ListItemObject)
 	if (!IsValid(DropDownMenuEntryObject))
 		return;
 
-	FString NewName = DropDownMenuEntryObject->DropDownMenuData.DropDownMenuName.ToString();
-	NewName += " (" + FString::FromInt(DropDownMenuEntryObject->DropDownMenuData.AllKnowledgeInMenuRowNames.Num());
-	NewName += ")";
-	DropDownMenuNameText->SetText(FText::FromString(NewName));
+	if (DropDownMenuEntryObject->bMenuIsOpened)
+	{
+		DropDownMenuEntryObject->bMenuIsOpened = false;
+		FillKnowledgeInformationsTreeView();
+	}
+	else
+	{
+		RestartDropDownMenuEntry();
+	}
+
+	SelectedDropDownMenu(DropDownMenuEntryObject->bMenuSelected);
+
+	FString NewDropDownMenuName = DropDownMenuEntryObject->DropDownMenuData.DropDownMenuName.ToString();
+	NewDropDownMenuName += " (" + FString::FromInt(DropDownMenuEntryObject->DropDownMenuData.AllKnowledgeInMenuRowNames.Num());
+	NewDropDownMenuName += ")";
+	DropDownMenuNameText->SetText(FText::FromString(NewDropDownMenuName));
 }
 
-void UDropDownMenuEntry::OnClicked_DropDownMenuButton()
+void UDropDownMenuEntry::OnPressed_SelectMenuButton()
 {
+	DropDownMenuEntryObject->KnowledgeWidget->SetDeselectEntryFunc([this](bool bSelect) {this->SelectedDropDownMenu(bSelect); });
+	SelectedDropDownMenu(true);
+}
+
+void UDropDownMenuEntry::OnPressed_DropDownMenuButton()
+{
+	OnPressed_SelectMenuButton();
+
 	FillKnowledgeInformationsTreeView();
 }
 
@@ -44,15 +68,13 @@ void UDropDownMenuEntry::FillKnowledgeInformationsTreeView()
 	if (!IsValid(DropDownMenuEntryObject))
 		return;
 
-	KnowledgeInformationsTreeView->ClearListItems();
-
 	if (DropDownMenuEntryObject->bMenuIsOpened)
 	{
-		KnowledgeInformationsTreeView->SetVisibility(ESlateVisibility::Collapsed);
-		DropDownMenuEntryObject->bMenuIsOpened = false;
-		DropDownArrowImage->SetRenderTransformAngle(ArrowAngleWhenClosed);
+		RestartDropDownMenuEntry();
 		return;
 	}
+
+	KnowledgeInformationsTreeView->ClearListItems();
 
 	if (!IsValid(DropDownMenuEntryObject->KnowledgeWidget))
 		return;
@@ -70,15 +92,45 @@ void UDropDownMenuEntry::FillKnowledgeInformationsTreeView()
 		if (!IsValid(KnowledgeInformationEntryObject))
 			return;
 
-		KnowledgeInformationEntryObject->GameKnowledgeDisplayText = FoundGameKnowledge->KnowledgeName;
-		KnowledgeInformationEntryObject->GameKnowledgeRowName = CurrentKnowledgeRowName;
+		KnowledgeInformationEntryObject->KnowledgeNameDisplayText = FoundGameKnowledge->KnowledgeName;
+		KnowledgeInformationEntryObject->KnowledgeRowName = CurrentKnowledgeRowName;
 		KnowledgeInformationEntryObject->KnowledgeWidget = DropDownMenuEntryObject->KnowledgeWidget;
 
 		KnowledgeInformationsTreeView->AddItem(KnowledgeInformationEntryObject);
 	}
 
-	DropDownArrowImage->SetRenderTransformAngle(ArrowAngleWhenOpened);
+	DropDownMenuButton->SetRenderTransformAngle(ArrowAngleWhenOpened);
 	KnowledgeInformationsTreeView->SetVisibility(ESlateVisibility::Visible);
 	DropDownMenuEntryObject->bMenuIsOpened = true;
+}
+
+void UDropDownMenuEntry::RestartDropDownMenuEntry()
+{
+	KnowledgeInformationsTreeView->ClearListItems();
+
+	KnowledgeInformationsTreeView->SetVisibility(ESlateVisibility::Collapsed);
+	DropDownMenuEntryObject->bMenuIsOpened = false;
+	DropDownMenuButton->SetRenderTransformAngle(ArrowAngleWhenClosed);
+}
+
+void UDropDownMenuEntry::SelectedDropDownMenu(bool bSelected)
+{
+	SelectMenuButton->SetVisibility(bSelected ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Visible);
+
+	if (bSelected)
+	{
+		SelectMenuButton->SetStyle(SelectedMenuButtonStyle);
+		DropDownMenuNameText->SetColorAndOpacity(SelectedMenuFontColor);
+	}
+	else
+	{
+		SelectMenuButton->SetStyle(OriginalMenuButtonStyle);
+		DropDownMenuNameText->SetColorAndOpacity(OriginalMenuFontColor);
+	}
+
+	if (!IsValid(DropDownMenuEntryObject))
+		return;
+
+	DropDownMenuEntryObject->bMenuSelected = bSelected;
 }
 

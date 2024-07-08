@@ -18,9 +18,11 @@ class MEDIEVALDYNASTY_API UKnowledgeInformationEntryObject : public UObject
 	
 public:
 	UPROPERTY(Transient)
-	FText GameKnowledgeDisplayText = FText();
+	FText KnowledgeNameDisplayText = FText();
 	UPROPERTY(Transient)
-	FName GameKnowledgeRowName = FName();
+	FName KnowledgeRowName = FName();
+	UPROPERTY(Transient)
+	bool bKnowledgeSelected = false;
 	UPROPERTY(Transient)
 	TObjectPtr<UKnowledgeWidget> KnowledgeWidget = nullptr;
 };

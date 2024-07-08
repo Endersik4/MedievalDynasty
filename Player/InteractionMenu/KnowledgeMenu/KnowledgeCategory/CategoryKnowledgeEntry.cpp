@@ -35,7 +35,7 @@ void UCategoryKnowledgeEntry::OnClicked_SelectCategoryButton()
 		return;
 
 	CategoryKnowledgeEntryObject->KnowledgeWidget->UpdateCategoryDisplayText(CategoryKnowledgeEntryObject->KnowledgeCategory.CategoryDisplayText);
-	CategoryKnowledgeEntryObject->KnowledgeWidget->UpdateCategory(this);
+	CategoryKnowledgeEntryObject->KnowledgeWidget->SetDeselectCategoryFunc([this](bool bSelect) {this->ActivateCategoryEntry(bSelect); });
 	CategoryKnowledgeEntryObject->KnowledgeWidget->FIllKnowledgeTreeView(CategoryKnowledgeEntryObject);
 
 	ActivateCategoryEntry(true);

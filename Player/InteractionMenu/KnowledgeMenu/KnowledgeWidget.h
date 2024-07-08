@@ -23,7 +23,13 @@ struct FGameKnowledge : public FTableRowBase
 	UPROPERTY(EditAnywhere, meta = (MultiLine = true))
 	FText KnowledgeDescription = FText();
 	UPROPERTY(EditAnywhere)
-	FString PathToKnowledgeVideo = FString();
+	bool bUseVideo = false;
+	UPROPERTY(EditAnywhere, meta = (EditCondition = "bUseVideo"))
+	TObjectPtr<UMaterial> MediaPlayerMaterial = nullptr;
+	UPROPERTY(EditAnywhere, meta = (EditCondition = "bUseVideo"))
+	TObjectPtr<class UMediaPlayer> MediaPlayerToPlay = nullptr;
+	UPROPERTY(EditAnywhere, meta = (EditCondition = "bUseVideo"))
+	TObjectPtr<class UMediaSource> MediaSourceToPlay = nullptr;
 };
 
 USTRUCT(BlueprintType)
@@ -63,10 +69,14 @@ class MEDIEVALDYNASTY_API UKnowledgeWidget : public UUserWidget
 
 public:
 	void UpdateCategoryDisplayText(const FText& NewCategoryDisplayText);
-	void UpdateCategory(TObjectPtr<class UCategoryKnowledgeEntry> NewSelectedKnowledgeCategoryEntry);
 	void FIllKnowledgeTreeView(TObjectPtr<class UCategoryKnowledgeEntryObject> CategoryObjectToFillFrom);
 
 	FORCEINLINE TObjectPtr<UDataTable> GetKnowledgeInformationDataAsset() const {return KnowledgeInformationDataAsset;}
+	FORCEINLINE TObjectPtr<class UDetailedKnowledgeInfoWidget> GetDetailedKnowledgeInfoWidget() const {return DetailedKnowledgeInfoWidget;}
+
+	void SetDeselectCategoryFunc(TFunction<void(bool)> NewDeselectCategoryFunc);
+	void SetDeselectEntryFunc(TFunction<void(bool)> NewDeselectEntryFunc);
+
 
 protected:
 	virtual void NativeOnInitialized() override;
@@ -87,6 +97,11 @@ protected:
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
 	TObjectPtr<UImage> RightCategoryDecorationImage = nullptr;
 
+	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
+	TObjectPtr<class UScrollBox> KnowledgeListHolderScrollBox = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
+	TObjectPtr<class UDetailedKnowledgeInfoWidget> DetailedKnowledgeInfoWidget = nullptr;
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Knowledge settings")
 	TObjectPtr<UDataTable> KnowledgeInformationDataAsset;
@@ -97,6 +112,6 @@ private:
 
 	void FIllKnowledgeCategoriesTileView();
 
-	UPROPERTY(Transient)
-	TObjectPtr<class UCategoryKnowledgeEntry> SelectedKnowledgeCategoryEntry = nullptr;
+	TFunction<void(bool)> DeselectEntryFunc;
+	TFunction<void(bool)> DeselectCategoryFunc;
 };

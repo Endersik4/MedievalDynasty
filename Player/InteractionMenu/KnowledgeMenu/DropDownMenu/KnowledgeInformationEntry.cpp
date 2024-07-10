@@ -4,6 +4,7 @@
 #include "MedievalDynasty/Player/InteractionMenu/KnowledgeMenu/DropDownMenu/KnowledgeInformationEntry.h"
 #include "Components/Button.h"
 #include "Components/TextBlock.h"
+#include "Components/Image.h"
 
 #include "KnowledgeInformationEntryObject.h"
 #include "MedievalDynasty/Player/InteractionMenu/KnowledgeMenu/DetailedKnowledgeInfoWidget.h"
@@ -14,6 +15,7 @@ void UKnowledgeInformationEntry::NativeOnInitialized()
 
 	OriginalKnowledgeButtonStyle = KnowledgeInformationButton->GetStyle();
 	OriginalKnowledgeFontColor = KnowledgeNameText->GetColorAndOpacity();
+	ItemIconImage->SetVisibility(ESlateVisibility::Hidden);
 
 	KnowledgeInformationButton->OnPressed.AddDynamic(this, &UKnowledgeInformationEntry::OnPressed_KnowledgeInformationButton);
 }

@@ -95,6 +95,8 @@ struct FBaseItemData : public FTableRowBase
 	UPROPERTY(EditAnywhere)
 	TEnumAsByte<EItemType> ItemType = EIT_Miscellaneous;
 	UPROPERTY(EditAnywhere)
+	FText ItemTypeText = FText();
+	UPROPERTY(EditAnywhere)
 	TEnumAsByte<EDurabilityType> DurabilityType = EDT_Uses;
 
 	UPROPERTY(EditAnywhere)

@@ -57,7 +57,7 @@ struct FKnowledgeCategory
 	UPROPERTY(EditAnywhere)
 	FText CategoryDisplayText = FText();
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, meta = (EditCondition = "!bUseItemDataTable"))
 	TArray<FDropDownMenuData> AllKnowledgeDropDownMenu;
 };
 

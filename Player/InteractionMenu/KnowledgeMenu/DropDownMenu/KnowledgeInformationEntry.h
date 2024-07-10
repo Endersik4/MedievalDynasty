@@ -24,9 +24,13 @@ protected:
 	virtual void NativeOnListItemObjectSet(UObject* ListItemObject) override;
 
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
+	TObjectPtr<class UHorizontalBox> KeepEverythingHorizontalBox = nullptr;
+	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
 	TObjectPtr<class UButton> KnowledgeInformationButton = nullptr;
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
 	TObjectPtr<class UTextBlock> KnowledgeNameText = nullptr;
+	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
+	TObjectPtr<class UImage> ItemIconImage = nullptr;
 
 	UFUNCTION()
 	void OnPressed_KnowledgeInformationButton();

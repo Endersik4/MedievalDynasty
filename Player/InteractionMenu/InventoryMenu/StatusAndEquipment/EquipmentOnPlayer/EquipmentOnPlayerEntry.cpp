@@ -37,11 +37,13 @@ void UEquipmentOnPlayerEntry::OnHovered_EquipmentPlayerButton()
 	if (!IsValid(EquipmentOnPlayerEntryObject->InventoryMenuWidget))
 		return;
 
+	if (!EquipmentOnPlayerEntryObject->InventoryMenuWidget->GetDraggingItemWidget()->GetIsDraggingItem())
+		return;
+
 	const FBaseItemData& DragingItem = EquipmentOnPlayerEntryObject->InventoryMenuWidget->GetDraggingItemWidget()->GetCurrentDragingItem();
 
 	if (DragingItem.EquipmentType != EquipmentOnPlayerEntryObject->EquipmentOnPlayer.CanEquipOnlyEquipmentType)
 		return;
-
 	if (IsValid(DragingItem.ItemIcon))
 	{
 		EquipmentIconImage->SetVisibility(ESlateVisibility::HitTestInvisible);

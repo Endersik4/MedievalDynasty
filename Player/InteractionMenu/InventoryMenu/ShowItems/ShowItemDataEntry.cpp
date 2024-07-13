@@ -5,6 +5,7 @@
 #include "Components/Button.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
+#include "Components/CanvasPanelSlot.h"
 
 #include "ShowItemDataObject.h"
 #include "MedievalDynasty/Player/InteractionMenu/InventoryMenu/InventoryMenuWidget.h"
@@ -84,7 +85,11 @@ void UShowItemDataEntry::OnPressed_SelectItemButton()
 		ShowItemDataObject->bItemSelected = true;
 	}
 	
-	ShowItemDataObject->InventoryMenuWidget->GetDraggingItemWidget()->StartDraggingItem(ShowItemDataObject->ItemData, GetTickSpaceGeometry().LocalToAbsolute(ItemIconImage->GetRenderTransform().Translation));
+	TObjectPtr<class UCanvasPanelSlot> SelectItemButtonCanvasSlot = Cast<UCanvasPanelSlot>(ItemIconImage->Slot);
+	if (!IsValid(SelectItemButtonCanvasSlot))
+		return;
+	
+	ShowItemDataObject->InventoryMenuWidget->GetDraggingItemWidget()->StartDraggingItem(ShowItemDataObject->ItemData, GetTickSpaceGeometry().LocalToAbsolute(SelectItemButtonCanvasSlot->GetPosition()));
 }
 
 void UShowItemDataEntry::OnReleased_SelectItemButton()

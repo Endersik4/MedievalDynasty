@@ -5,10 +5,13 @@
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Components/Image.h"
+#include "Components/CanvasPanelSlot.h"
 
 void UDragItemWidget::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
+
+	DraggingItemCanvasSlot = Cast<UCanvasPanelSlot>(DraggingItemIconImage->Slot);
 
 	DraggingItemIconImage->SetVisibility(ESlateVisibility::Hidden);
 }
@@ -16,8 +19,8 @@ void UDragItemWidget::NativeOnInitialized()
 void UDragItemWidget::StartDraggingItem(FBaseItemData NewCurrentDragingItem, const FVector2D& StartDragingLocation)
 {
 	CurrentDragingItem = NewCurrentDragingItem;
-	ItemEntryIconPosition = StartDragingLocation;
-
+	ItemEntryIconPosition = GetTickSpaceGeometry().AbsoluteToLocal(StartDragingLocation);
+	
 	CursorPositionWhenPressed = UWidgetLayoutLibrary::GetMousePositionOnPlatform();
 	bStartCheckingDraggingItem = true;
 }
@@ -57,21 +60,21 @@ bool UDragItemWidget::CheckIfCanStartDraggingItem()
 
 void UDragItemWidget::DraggingItemIcon(const FGeometry& MyGeometry, float Delta)
 {
-	if (!bIsDraggingItem)
+	if (!bIsDraggingItem || !IsValid(DraggingItemCanvasSlot))
 		return;
 
-	const FVector2D& MousePosition = UWidgetLayoutLibrary::GetMousePositionOnPlatform();
+	const FVector2D& MousePosition = MyGeometry.AbsoluteToLocal(UWidgetLayoutLibrary::GetMousePositionOnPlatform());
 
 	if (bIgnoreSmoothDragging)
 	{
-		DraggingItemIconImage->SetRenderTranslation(MousePosition);
+		DraggingItemCanvasSlot->SetPosition(MousePosition);
 		return;
 	}
 
 	if (MoveItemIconToCursorTimeElapsed <= MoveItemIconToCursorTime)
 	{
 		const FVector2D NewItemMovingIconPosition = FMath::Lerp(ItemEntryIconPosition, MousePosition, MoveItemIconToCursorTimeElapsed / MoveItemIconToCursorTime);
-		DraggingItemIconImage->SetRenderTranslation(NewItemMovingIconPosition);
+		DraggingItemCanvasSlot->SetPosition(NewItemMovingIconPosition);
 
 		MoveItemIconToCursorTimeElapsed += Delta;
 	}
@@ -98,5 +101,4 @@ void UDragItemWidget::RemoveDragingItem()
 {
 	CurrentDragingItem = FBaseItemData();
 	bIsDraggingItem = false;
-
 }

@@ -64,4 +64,6 @@ private:
 
 	UPROPERTY(Transient)
 	FTimerHandle RemoveCurrentDraggingItemHandle = FTimerHandle();
+	UPROPERTY(Transient)
+	TObjectPtr<class UCanvasPanelSlot>  DraggingItemCanvasSlot = nullptr;
 };

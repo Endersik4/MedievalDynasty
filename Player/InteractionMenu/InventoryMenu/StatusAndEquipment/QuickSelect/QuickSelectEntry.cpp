@@ -5,6 +5,7 @@
 #include "Components/TextBlock.h"
 #include "Components/Image.h"
 #include "Components/Button.h"
+#include "Components/CanvasPanelSlot.h"
 
 #include "QuickSelectEntryObject.h"
 #include "MedievalDynasty/Player/InteractionMenu/InventoryMenu/InventoryMenuWidget.h"
@@ -48,8 +49,13 @@ void UQuickSelectEntry::OnPressed_QuickSelectButton()
 		return;
 
 	DraggingItemWidget->ItemFoundNewSlotFunc = [this]() {this->ItemFoundNewSlot(); };
+
+	TObjectPtr<class UCanvasPanelSlot> SelectItemButtonCanvasSlot = Cast<UCanvasPanelSlot>(ToolIconImage->Slot);
+	if (!IsValid(SelectItemButtonCanvasSlot))
+		return;
+
 	DraggingItemWidget->StartDraggingItem(QuickSelectEntryObject->ItemInQuickSelect, 
-		GetTickSpaceGeometry().LocalToAbsolute(QuickSelectButton->GetRenderTransform().Translation));
+		GetTickSpaceGeometry().LocalToAbsolute(SelectItemButtonCanvasSlot->GetPosition()));
 }
 
 void UQuickSelectEntry::OnReleased_QuickSelectButton()

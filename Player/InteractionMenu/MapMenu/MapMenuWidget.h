@@ -57,7 +57,11 @@ protected:
 	TObjectPtr<class USortedMapWaypointsWidget> SortedMapWaypointsWidget = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
+	TObjectPtr<class UMapWidget> MapWidget = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
 	TObjectPtr<UImage> BackgroundImageForMap = nullptr;
+
 
 private:
 	UPROPERTY(EditAnywhere, Category = "Waypoints settings")

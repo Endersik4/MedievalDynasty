@@ -5,6 +5,7 @@
 
 #include "WorldInformationMapWidget.h"
 #include "SortedMapWaypointsWidget.h"
+#include "MapWidget.h"
 
 void UMapMenuWidget::NativeOnInitialized()
 {

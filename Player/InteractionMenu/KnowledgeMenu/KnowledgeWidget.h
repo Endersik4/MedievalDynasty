@@ -61,6 +61,7 @@ struct FKnowledgeCategory
 	TArray<FDropDownMenuData> AllKnowledgeDropDownMenu;
 };
 
+////// to do: COMPLETELY REWORK ///////
 class UImage;
 UCLASS()
 class MEDIEVALDYNASTY_API UKnowledgeWidget : public UUserWidget

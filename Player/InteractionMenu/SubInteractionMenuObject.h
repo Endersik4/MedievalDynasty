@@ -20,6 +20,4 @@ public:
 	FSubInteractionMenuType SubInteractionMenuType = FSubInteractionMenuType();
 	UPROPERTY(Transient)
 	TObjectPtr<UInteractionMenuWidget> InteractionMenuWidget = nullptr;
-	UPROPERTY(Transient)
-	TObjectPtr<class USubInteractionMenuEntry> AssignedEntryWidget = nullptr;
 };

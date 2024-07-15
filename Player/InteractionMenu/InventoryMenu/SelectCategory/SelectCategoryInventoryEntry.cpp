@@ -35,7 +35,7 @@ void USelectCategoryInventoryEntry::OnClicked_SortInventoryButton()
 		return;
 
 	SelectCategoryEntryObject->InventoryMenuWidget->UpdateCategoryDisplayText(SelectCategoryEntryObject->CategoryToDivideItems.CategoryDisplayText);
-	SelectCategoryEntryObject->InventoryMenuWidget->UpdateCategory(this);
+	SelectCategoryEntryObject->InventoryMenuWidget->UpdateCategory([this](bool bActivate) {this->ActivateCategoryEntry(bActivate); });
 	SelectCategoryEntryObject->InventoryMenuWidget->UpdateInventory(SelectCategoryEntryObject->CategoryToDivideItems.bDivideItemsUsingCategory, SelectCategoryEntryObject->CategoryToDivideItems.CategoryType);
 
 	ActivateCategoryEntry(true);

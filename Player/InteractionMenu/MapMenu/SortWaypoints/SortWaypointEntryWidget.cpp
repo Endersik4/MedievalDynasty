@@ -1,7 +1,7 @@
 // Copyright Adam Bartela. All Rights Reserved
 
 
-#include "MedievalDynasty/Player/InteractionMenu/MapMenu/SortWaypointEntryWidget.h"
+#include "SortWaypointEntryWidget.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
 

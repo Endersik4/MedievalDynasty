@@ -1,12 +1,12 @@
 // Copyright Adam Bartela. All Rights Reserved
 
 
-#include "MedievalDynasty/Player/InteractionMenu/MapMenu/SortedMapWaypointsWidget.h"
+#include "SortedMapWaypointsWidget.h"
 #include "Components/ListView.h"
 #include "Components/Button.h"
 #include "Components/TextBlock.h"
 
-#include "MapMenuWidget.h"
+#include "MedievalDynasty/Player/InteractionMenu/MapMenu/MapMenuWidget.h"
 #include "SortWaypointEntryObject.h"
 
 void USortedMapWaypointsWidget::NativeOnInitialized()

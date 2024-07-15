@@ -15,7 +15,7 @@ class MEDIEVALDYNASTY_API UShowItemDataEntry : public UUserWidget, public IUserO
 	GENERATED_BODY()
 
 public:
-	void DeselectShowItemEntry();
+	void ActivateShowItemEntry(bool bActivate = true);
 
 protected:
 	virtual void NativeOnInitialized() override;

@@ -48,10 +48,7 @@ private:
 	UPROPERTY(Transient)
 	TObjectPtr<class USubInteractionMenuObject> SubInteractionMenuObject = nullptr;
 	UPROPERTY(Transient)
-	FSlateColor OriginalTextColor = FSlateColor();
+	FSlateColor OriginalSubInteractionTextColor = FSlateColor();
 	UPROPERTY(Transient)
-	FButtonStyle OriginalButtonStyle = FButtonStyle();
-
-	UPROPERTY(Transient)
-	bool bIsInUse = false;
+	FButtonStyle OriginalSubInteractionButtonStyle = FButtonStyle();
 };

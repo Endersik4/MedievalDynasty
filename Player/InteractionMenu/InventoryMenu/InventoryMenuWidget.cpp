@@ -14,8 +14,6 @@
 #include "MedievalDynasty/Player/Components/PlayerStatusComponent.h"
 #include "SelectCategory/SelectCategoryEntryObject.h"
 #include "ShowItems/ShowItemDataObject.h"
-#include "ShowItems/ShowItemDataEntry.h"
-#include "SelectCategory/SelectCategoryInventoryEntry.h"
 #include "DetailedItemInfoWidget.h"
 #include "SortItemsWidget.h"
 #include "StatusAndEquipment/StatusAndEquipmentWidget.h"
@@ -73,12 +71,12 @@ void UInventoryMenuWidget::UpdateCategoryDisplayText(const FText& NewCategoryDis
 	CategoryDisplayName->SetText(NewCategoryDisplayText);
 }
 
-void UInventoryMenuWidget::UpdateCategory(TObjectPtr<class USelectCategoryInventoryEntry> NewCurrentSelectedCategoryEntry)
+void UInventoryMenuWidget::UpdateCategory(TFunction<void(bool)> ActivateCategoryCallFunction)
 {
-	if (IsValid(CurrentSelectedCategoryEntry))
-		CurrentSelectedCategoryEntry->ActivateCategoryEntry(false);
+	if (ActivateCategoryFunc)
+		ActivateCategoryFunc(false);
 
-	CurrentSelectedCategoryEntry = NewCurrentSelectedCategoryEntry;
+	ActivateCategoryFunc = ActivateCategoryCallFunction;
 
 	DetailedItemInfoWidget->SetVisibility(ESlateVisibility::Hidden);
 }
@@ -178,12 +176,12 @@ void UInventoryMenuWidget::UpdateWeight(TObjectPtr<class UPlayerStatusComponent>
 }
 #pragma endregion
 
-void UInventoryMenuWidget::SetSelectedShowItemDataEntry(TObjectPtr<class UShowItemDataEntry> NewSelectedShowItemDataEntry)
+void UInventoryMenuWidget::UpdateSelectedShowItemDataEntry(TFunction<void(bool)> ActivateShowItemCallFunction)
 {
-	if (IsValid(SelectedShowItemDataEntry))
-		SelectedShowItemDataEntry->DeselectShowItemEntry();
+	if (ActivateShowItemFunc)
+		ActivateShowItemFunc(false);
 
-	SelectedShowItemDataEntry = NewSelectedShowItemDataEntry;
+	ActivateShowItemFunc = ActivateShowItemCallFunction;
 }
 
 void UInventoryMenuWidget::HighlightEquipmentOnPlayer(bool bHighlight, const FBaseItemData& ItemToCheck)

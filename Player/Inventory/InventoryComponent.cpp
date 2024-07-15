@@ -39,7 +39,6 @@ void UInventoryComponent::OpenInteractionMenu(int32 SubMenuIDToInitiallyOpen)
 		return;
 
 	InteractionMenuWidget->AddToViewport();
-	InteractionMenuWidget->SetPlayerController(PlayerController);
 	InteractionMenuWidget->OpenSubInteractionMenuAccordingToID(SubMenuIDToInitiallyOpen);
 
 	PlayerController->SetShowMouseCursor(true);

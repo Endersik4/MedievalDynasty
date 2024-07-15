@@ -2,12 +2,9 @@
 
 
 #include "MedievalDynasty/Player/InteractionMenu/InteractionMenuWidget.h"
-#include "Components/BackgroundBlur.h"
-#include "Components/Image.h"
 #include "Components/TileView.h"
 
 #include "SubInteractionMenuObject.h"
-#include "SubInteractionMenuEntry.h"
 
 void UInteractionMenuWidget::NativeOnInitialized()
 {
@@ -36,25 +33,24 @@ void UInteractionMenuWidget::FillSubInteractionsTileView()
 	}
 }
 
-void UInteractionMenuWidget::SpawnNewSubInteractionWidget(TSubclassOf<UUserWidget> WidgetClassToSpawn, TObjectPtr<USubInteractionMenuEntry> SpawnedSubInteractionEntry)
+void UInteractionMenuWidget::SpawnNewSubInteractionWidget(TSubclassOf<UUserWidget> WidgetClassToSpawn)
 {
-	if (!IsValid(PlayerController))
+	if (!IsValid(GetOwningPlayer()))
 		return;
 
 	RemovePreviousSubInteractionWidget();
-
-	CurrentSubInteractionMenu = CreateWidget(PlayerController, WidgetClassToSpawn);
+	
+	CurrentSubInteractionMenu = CreateWidget(GetOwningPlayer(), WidgetClassToSpawn);
 	if (!IsValid(CurrentSubInteractionMenu))
 		return;
 
 	CurrentSubInteractionMenu->AddToViewport();
-	CurrentSubInteractionMenuEntry = SpawnedSubInteractionEntry;
 }
 
 void UInteractionMenuWidget::RemovePreviousSubInteractionWidget()
 {
 	if (IsValid(CurrentSubInteractionMenu))
 		CurrentSubInteractionMenu->RemoveFromParent();
-	if (IsValid(CurrentSubInteractionMenuEntry))
-		CurrentSubInteractionMenuEntry->ActivateSubInteractionMenu(false);
+	if (SubInteractionMenuDisabledFunc)
+		SubInteractionMenuDisabledFunc(false);
 }

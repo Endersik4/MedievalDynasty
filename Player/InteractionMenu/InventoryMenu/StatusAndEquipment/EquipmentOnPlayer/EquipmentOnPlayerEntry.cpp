@@ -44,14 +44,15 @@ void UEquipmentOnPlayerEntry::OnHovered_EquipmentPlayerButton()
 
 	if (DragingItem.EquipmentType != EquipmentOnPlayerEntryObject->EquipmentOnPlayer.CanEquipOnlyEquipmentType)
 		return;
-	if (IsValid(DragingItem.ItemIcon))
-	{
-		EquipmentIconImage->SetVisibility(ESlateVisibility::HitTestInvisible);
-		EquipmentIconImage->SetBrushFromTexture(DragingItem.ItemIcon);
-		EquipmentOnPlayerButton->SetStyle(HighlightedOccupiedEquipmentButtonStyle);
 
-		EquipmentOnPlayerEntryObject->bOccupied = true;
-	}
+	if (!IsValid(DragingItem.ItemIcon))
+		return;
+
+	EquipmentIconImage->SetVisibility(ESlateVisibility::HitTestInvisible);
+	EquipmentIconImage->SetBrushFromTexture(DragingItem.ItemIcon);
+	EquipmentOnPlayerButton->SetStyle(HighlightedOccupiedEquipmentButtonStyle);
+
+	EquipmentOnPlayerEntryObject->bOccupied = true;
 }
 
 void UEquipmentOnPlayerEntry::HighlightEquipment(bool bHighlight)

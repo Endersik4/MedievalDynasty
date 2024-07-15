@@ -31,7 +31,7 @@ void UShowItemDataEntry::NativeOnListItemObjectSet(UObject* ListItemObject)
 	if (!IsValid(ShowItemDataObject))
 		return;
 
-	if (ShowItemDataObject->bInitallySelectedItem)
+	if (ShowItemDataObject->bInitallySelectedItem || ShowItemDataObject->bItemSelected)
 	{
 		OnPressed_SelectItemButton();
 		OnReleased_SelectItemButton();
@@ -39,7 +39,6 @@ void UShowItemDataEntry::NativeOnListItemObjectSet(UObject* ListItemObject)
 	}
 
 	UpdateItemDisplayInformations();
-
 }
 
 void UShowItemDataEntry::UpdateItemDisplayInformations()
@@ -70,20 +69,9 @@ void UShowItemDataEntry::OnPressed_SelectItemButton()
 	if (!IsValid(ShowItemDataObject->InventoryMenuWidget))
 		return;
 
-	if (!ShowItemDataObject->bItemSelected)
-	{
-		ShowItemDataObject->InventoryMenuWidget->OnClicked_ShowItemDataEntry(ShowItemDataObject);
-		ShowItemDataObject->InventoryMenuWidget->SetSelectedShowItemDataEntry(this);
-		ChangeFontColorToAllTextes(OnHoveredFontColor);
-		SelectItemButton->SetStyle(ItemSelectedButtonStyle);
-
-		if (ShowItemDataObject->ItemData.EquipmentType != EET_None)
-		{
-			ShowItemDataObject->InventoryMenuWidget->HighlightEquipmentOnPlayer(true, ShowItemDataObject->ItemData);
-		}
-
-		ShowItemDataObject->bItemSelected = true;
-	}
+	ShowItemDataObject->InventoryMenuWidget->OnClicked_ShowItemDataEntry(ShowItemDataObject);
+	ShowItemDataObject->InventoryMenuWidget->UpdateSelectedShowItemDataEntry([this](bool bActivate) {this->ActivateShowItemEntry(bActivate); });
+	ActivateShowItemEntry();
 	
 	TObjectPtr<class UCanvasPanelSlot> SelectItemButtonCanvasSlot = Cast<UCanvasPanelSlot>(ItemIconImage->Slot);
 	if (!IsValid(SelectItemButtonCanvasSlot))
@@ -97,18 +85,19 @@ void UShowItemDataEntry::OnReleased_SelectItemButton()
 	ShowItemDataObject->InventoryMenuWidget->GetDraggingItemWidget()->StopDraggingItem();
 }
 
-void UShowItemDataEntry::DeselectShowItemEntry()
+void UShowItemDataEntry::ActivateShowItemEntry(bool bActivate)
 {
-	ChangeFontColorToAllTextes(OriginalTextColor);
-	SelectItemButton->SetStyle(OriginalSelectItemButtonStyle);
-	ShowItemDataObject->bItemSelected = false;
+	ChangeFontColorToAllTextes(bActivate ? OnHoveredFontColor : OriginalTextColor);
+	SelectItemButton->SetStyle(bActivate ? ItemSelectedButtonStyle : OriginalSelectItemButtonStyle);
+
+	ShowItemDataObject->bItemSelected = bActivate;
 
 	if (!IsValid(ShowItemDataObject))
 		return;
 
 	if (ShowItemDataObject->ItemData.EquipmentType != EET_None)
 	{
-		ShowItemDataObject->InventoryMenuWidget->HighlightEquipmentOnPlayer(false, ShowItemDataObject->ItemData);
+		ShowItemDataObject->InventoryMenuWidget->HighlightEquipmentOnPlayer(bActivate, ShowItemDataObject->ItemData);
 	}
 }
 

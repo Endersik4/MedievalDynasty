@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "MapMenuWidget.h"
+#include "MedievalDynasty/Player/InteractionMenu/MapMenu/MapMenuWidget.h"
 #include "SortWaypointEntryObject.generated.h"
 
 /**

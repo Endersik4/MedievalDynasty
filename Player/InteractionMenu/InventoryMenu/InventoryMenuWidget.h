@@ -49,9 +49,9 @@ class MEDIEVALDYNASTY_API UInventoryMenuWidget : public UUserWidget
 public:
 	void UpdateInventory(bool bDivideWithCategory = false, EItemType CategoryTypeToDivide = EIT_Miscellaneous);
 	void UpdateCategoryDisplayText(const FText& NewCategoryDisplayText);
-	void UpdateCategory(TObjectPtr<class USelectCategoryInventoryEntry> NewCurrentSelectedCategoryEntry);
+	void UpdateCategory(TFunction<void(bool)> ActivateCategoryCallFunction);
 
-	void SetSelectedShowItemDataEntry(TObjectPtr<class UShowItemDataEntry> NewSelectedShowItemDataEntry);
+	void UpdateSelectedShowItemDataEntry(TFunction<void(bool)> ActivateShowItemCallFunction);
 
 	void HighlightEquipmentOnPlayer(bool bHighLight, const FBaseItemData& ItemToCheck);
 
@@ -127,10 +127,9 @@ private:
 	// when inventory is spawned then sort items by name
 	void SortItemsByNameDescending();
 
-	UPROPERTY(Transient)
-	TObjectPtr<class UShowItemDataEntry> SelectedShowItemDataEntry = nullptr;
-	UPROPERTY(Transient)
-	TObjectPtr<class USelectCategoryInventoryEntry> CurrentSelectedCategoryEntry = nullptr;
+	TFunction<void(bool)> ActivateCategoryFunc;
+	TFunction<void(bool)> ActivateShowItemFunc;
+
 	UPROPERTY(Transient)
 	TObjectPtr<class UInventoryComponent> PlayerInventoryComponent = nullptr;
 	UPROPERTY(Transient)

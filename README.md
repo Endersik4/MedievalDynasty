@@ -64,6 +64,7 @@ Below are screenshots of the current progress of the Medieval Dynasty UI
 	<li>When a spawned entry from a drop-down menu is pressed, detailed knowledge information is displayed</li>
 	<li>Detailed knowledge information includes: name of knowledge, category icon, knowledge description with a scroll bar for long text, and a video if added</li>
 </ul>
+<i>+ other small things</i>
 
 ![ScreenShot00000](https://github.com/Endersik4/MedievalDynasty/assets/131354098/f822154e-cafa-4f08-b205-8b0107bd1ec6)
 ![ScreenShot00010](https://github.com/user-attachments/assets/6d68a03d-1d8a-4065-ad45-c3d494a5f14e)

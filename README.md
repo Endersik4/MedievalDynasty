@@ -55,7 +55,7 @@ Below are screenshots of the current progress of the Medieval Dynasty UI
 	<li>The map can be zoomed in/out at the cursor position</li>
 </ul>
 <h3>Knowledge</h3>
-<i>(I'm planning to rework this section as the current implementation is not ideal)</i><br/>
+<i>(I'm planning to rework this section as the current implementation is not ideal)</i><br/><br/>
 <ul>
 	<li>Categories with different knowledge topics</li>
 	<li>Drop-down menus displaying the name and the number of entries in each menu</li>

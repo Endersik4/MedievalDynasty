@@ -23,7 +23,7 @@ Below are screenshots of the current progress of the Medieval Dynasty UI
 	<li>Items can be dragged; the dragging item widget spawns from the item icon location and moves to the cursor position</li>
 	<li>Dragging starts when the player moves the mouse slightly while pressing</li>
 	<li>If there are no items in the inventory/category, the text "No Items Found" is displayed</li>
-	<li>Player's Equipment</li>
+	<li><strong>Player's Equipment</strong></li>
 	<ul>
 		<li>Shows the player's nickname and age</li>
 		<li>Renders the player model in real-time as a render target</li>
@@ -31,13 +31,13 @@ Below are screenshots of the current progress of the Medieval Dynasty UI
 		<li>When an item with an equipment type is selected, the corresponding equipment slot is highlighted</li>
 		<li>If a slot is occupied, the button is blocked (can't be hovered or clicked), but equipment can still be changed</li>
 	</ul>
-	<li>Quick Select</li>
+	<li><strong>Quick Select</strong></li>
 	<ul>
 		<li>Items can be dragged to the Quick Select Slot</li>
 		<li>Items can be dragged from the Quick Select Slot, spawning the dragging item widget from the item icon location</li>
 		<li>Only items of the appropriate type can be dragged to the Quick Select Slot (e.g., Tools)</li>
 	</ul>
-	<li>Player's Status</li>
+	<li><strong>Player's Status</strong></li>
 	<ul>
 		<li>Displays all player statuses such as Health, Food, Water, Poison, Temperature, etc.</li>
 		<li>For temperature, an additional image acts as a pointer to show the current temperature instead of a progress bar</li>
@@ -55,7 +55,7 @@ Below are screenshots of the current progress of the Medieval Dynasty UI
 	<li>The map can be zoomed in/out at the cursor position</li>
 </ul>
 <h3>Knowledge</h3>
-(I'm planning to rework this section as the current implementation is not ideal)
+<i>(I'm planning to rework this section as the current implementation is not ideal)</i>
 <ul>
 	<li>Categories with different knowledge topics</li>
 	<li>Drop-down menus displaying the name and the number of entries in each menu</li>

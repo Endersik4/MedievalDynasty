@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "MedievalDynasty/Player/InteractionMenu/MapMenu/MapMenuWidget.h"
 #include "SortWaypointEntryObject.generated.h"
 
 /**
@@ -17,5 +16,7 @@ class MEDIEVALDYNASTY_API USortWaypointEntryObject : public UObject
 	
 public:
 	UPROPERTY(EditAnywhere)
-	FWaypointOnMap WaypointOnMap;
+	FText WaypointDisplayText = FText();
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UTexture2D> WaypointIcon = nullptr;
 };

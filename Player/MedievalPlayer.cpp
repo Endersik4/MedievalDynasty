@@ -12,6 +12,7 @@
 
 #include "Inventory/InventoryComponent.h"
 #include "Components/PlayerStatusComponent.h"
+#include "MedievalDynasty/Objects/Components/WaypointComponent.h"
 
 AMedievalPlayer::AMedievalPlayer()
 {
@@ -32,6 +33,7 @@ AMedievalPlayer::AMedievalPlayer()
 
 	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("Inventory Component"));
 	PlayerStatusComponent = CreateDefaultSubobject<UPlayerStatusComponent>(TEXT("Player Status Component"));
+	WaypointComponent = CreateDefaultSubobject<UWaypointComponent>(TEXT("Waypoint Component"));
 
 	bReplicates = true;
 	SetReplicateMovement(true);

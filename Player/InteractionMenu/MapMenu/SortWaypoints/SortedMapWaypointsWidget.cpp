@@ -26,7 +26,7 @@ void USortedMapWaypointsWidget::OnPressed_LeftChoice_SortButton()
 
 	if (CurrentWaypointsOnMapIndex - 1 < 0)
 	{
-		MapMenuWidget->SetCurrentWaypointsOnMapIndex(MapMenuWidget->GetAllWaypointsOnMap().Num() - 1);
+		MapMenuWidget->SetCurrentWaypointsOnMapIndex(MapMenuWidget->GetSortedWaypointsToCategory().Num() - 1);
 	}
 	else 
 	{
@@ -43,7 +43,7 @@ void USortedMapWaypointsWidget::OnPressed_RightChoice_SortButton()
 
 	const int32 CurrentWaypointsOnMapIndex = MapMenuWidget->GetCurrentWaypointsOnMapIndex();
 
-	if (CurrentWaypointsOnMapIndex + 1 >= MapMenuWidget->GetAllWaypointsOnMap().Num())
+	if (CurrentWaypointsOnMapIndex + 1 >= MapMenuWidget->GetSortedWaypointsToCategory().Num())
 	{
 		MapMenuWidget->SetCurrentWaypointsOnMapIndex(0);
 	}
@@ -62,21 +62,27 @@ void USortedMapWaypointsWidget::FillSortedWaypointsListView()
 
 	SortedWaypointsListView->ClearListItems();
 
-	const TArray<FWaypointSort> AllWaypoints = MapMenuWidget->GetAllWaypointsOnMap();
+	MapMenuWidget->UpdateWaypoints();
+
+	const TArray<FWaypointSort> SortedWaypointsToCategory = MapMenuWidget->GetSortedWaypointsToCategory();
 	const int32& CurrentWaypointsOnMapIndex = MapMenuWidget->GetCurrentWaypointsOnMapIndex();
 
-	if (CurrentWaypointsOnMapIndex >= AllWaypoints.Num() || CurrentWaypointsOnMapIndex < 0)
+	if (CurrentWaypointsOnMapIndex >= SortedWaypointsToCategory.Num() || CurrentWaypointsOnMapIndex < 0)
 		return;
 
-	SortDisplayNameTextBlock->SetText(AllWaypoints[CurrentWaypointsOnMapIndex].WaypointSortDisplayName);
+	SortDisplayNameTextBlock->SetText(SortedWaypointsToCategory[CurrentWaypointsOnMapIndex].WaypointSortDisplayName);
 
-	for (const FWaypointOnMap& CurrentWaypoint : AllWaypoints[CurrentWaypointsOnMapIndex].Waypoints)
+	for (const FWaypointOnMap& CurrentWaypoint : SortedWaypointsToCategory[CurrentWaypointsOnMapIndex].AllSortedWaypoints)
 	{
+		if (CurrentWaypoint.bIgnoreCategory)
+			continue;
+
 		TObjectPtr<USortWaypointEntryObject> SortWaypointEntryObject = NewObject<USortWaypointEntryObject>();
 		if (!IsValid(SortWaypointEntryObject))
 			return;
 
-		SortWaypointEntryObject->WaypointOnMap = CurrentWaypoint;
+		SortWaypointEntryObject->WaypointDisplayText = CurrentWaypoint.WaypointDisplayName;
+		SortWaypointEntryObject->WaypointIcon = CurrentWaypoint.WaypointIcon;
 
 		SortedWaypointsListView->AddItem(SortWaypointEntryObject);
 	}

@@ -4,34 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-
+#include "WaypointData.h"
 #include "MapMenuWidget.generated.h"
-
-USTRUCT(BlueprintType)
-struct FWaypointOnMap
-{
-	GENERATED_USTRUCT_BODY();
-
-	UPROPERTY(EditAnywhere)
-	FString WaypointName = FString();
-	UPROPERTY(EditAnywhere)
-	FVector WaypointWorldLocation = FVector();
-	UPROPERTY(EditAnywhere)
-	FText WaypointDisplayName = FText();
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<UTexture2D> WaypointIcon = nullptr;
-};
-
-USTRUCT(BlueprintType)
-struct FWaypointSort
-{
-	GENERATED_USTRUCT_BODY();
-
-	UPROPERTY(EditAnywhere)
-	FText WaypointSortDisplayName = FText();
-	UPROPERTY(EditAnywhere)
-	TArray<FWaypointOnMap> Waypoints;
-};
 
 class UTextBlock;
 class UWrapBox;
@@ -45,7 +19,9 @@ public:
 	FORCEINLINE void SetCurrentWaypointsOnMapIndex(int32 NewCurrentWaypointsOnMapIndex) { CurrentWaypointsOnMapIndex = NewCurrentWaypointsOnMapIndex; }
 
 	FORCEINLINE int32 GetCurrentWaypointsOnMapIndex() const {return CurrentWaypointsOnMapIndex;}
-	FORCEINLINE const TArray<FWaypointSort>& GetAllWaypointsOnMap() const {return AllWaypointsOnMap;}
+	FORCEINLINE const TArray<FWaypointSort>& GetSortedWaypointsToCategory() const {return SortedWaypointsToCategory;}
+
+	void UpdateWaypoints();
 
 protected:
 	virtual void NativeOnInitialized() override;
@@ -65,7 +41,7 @@ protected:
 
 private:
 	UPROPERTY(EditAnywhere, Category = "Waypoints settings")
-	TArray<FWaypointSort> AllWaypointsOnMap;
+	TArray<FWaypointSort> SortedWaypointsToCategory;
 
 	UPROPERTY(Transient)
 	int32 CurrentWaypointsOnMapIndex = 0;

@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "InteractionMenu/MapMenu/WaypointData.h"
+
 #include "MedievalPlayer.generated.h"
 
 UCLASS()
@@ -26,12 +28,17 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	FORCEINLINE void AddWaypoint(FWaypoint NewWaypoint) { AllWaypoints.Add(NewWaypoint); }
+
 	FORCEINLINE FString GetPlayersName() const { return PlayersName; }
 	FORCEINLINE int32 GetPlayersAge() const { return PlayersAge; }
 
 	FORCEINLINE TObjectPtr<class USkeletalMeshComponent> GetPlayerSkeletalMesh() const { return PlayerSkeletalMesh; }
 	FORCEINLINE TObjectPtr<class UInventoryComponent> GetInventoryComponent() const {return InventoryComponent;}
 	FORCEINLINE TObjectPtr<class UPlayerStatusComponent> GetPlayerStatusComponent() const {return PlayerStatusComponent;}
+
+	FORCEINLINE const TArray<FWaypoint>& GetAllWaypoints() const {return AllWaypoints;}
+	FORCEINLINE const TObjectPtr<UDataTable> GetWaypointsDataTable() const {return WaypointsDataTable;}
 
 protected:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
@@ -60,6 +67,8 @@ private:
 	TObjectPtr<class UInventoryComponent> InventoryComponent = nullptr;
 	UPROPERTY(EditDefaultsOnly, Category = "Components")
 	TObjectPtr<class UPlayerStatusComponent> PlayerStatusComponent = nullptr;
+	UPROPERTY(EditDefaultsOnly, Category = "Components")
+	TObjectPtr<class UWaypointComponent> WaypointComponent = nullptr;
 
 	UPROPERTY(EditAnywhere, Category = "Player Settings")
 	FString PlayersName = FString("Endersik");
@@ -77,6 +86,11 @@ private:
 	float MeshRotationSpeed = 7.f;
 	UPROPERTY(EditDefaultsOnly, Category = "Player Settings|Camera Settings")
 	FFloatRange LimitPitchRotation = FFloatRange(-30.f, 30.f);
+
+	UPROPERTY(EditDefaultsOnly, Category = "Waypoints")
+	TObjectPtr<UDataTable> WaypointsDataTable = nullptr;
+	UPROPERTY(EditDefaultsOnly, Category = "Waypoints")
+	TArray<FWaypoint> AllWaypoints;
 
 	void Forward(float Axis);
 	void Right(float Axis);

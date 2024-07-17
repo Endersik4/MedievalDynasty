@@ -16,8 +16,9 @@ void USortWaypointEntryWidget::NativeOnListItemObjectSet(UObject* ListItemObject
 	if (!IsValid(SortWaypointEntryObject))
 		return;
 
-	if (SortWaypointEntryObject->WaypointOnMap.WaypointIcon)
-		WaypointIconImage->SetBrushFromTexture(SortWaypointEntryObject->WaypointOnMap.WaypointIcon);
 
-	WaypointDisplayText->SetText(SortWaypointEntryObject->WaypointOnMap.WaypointDisplayName);
+	if (SortWaypointEntryObject->WaypointIcon)
+		WaypointIconImage->SetBrushFromTexture(SortWaypointEntryObject->WaypointIcon);
+
+	WaypointDisplayText->SetText(SortWaypointEntryObject->WaypointDisplayText);
 }

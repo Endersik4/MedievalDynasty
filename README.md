@@ -72,7 +72,8 @@ Below are screenshots of the current progress of the Medieval Dynasty UI
 ![ScreenShot00004](https://github.com/Endersik4/MedievalDynasty/assets/131354098/1c381fc5-a4f4-48b6-874f-0d0d5789dc8e)
 ![ScreenShot00005](https://github.com/Endersik4/MedievalDynasty/assets/131354098/be113ee4-6790-48d5-acbd-35cccfa41566)
 ![ScreenShot00006](https://github.com/Endersik4/MedievalDynasty/assets/131354098/6fe26ba4-b817-457c-bd43-04ebad5274c1)
-![ScreenShot00008](https://github.com/user-attachments/assets/4acb1b1e-fa2d-446a-84a6-dcb770179781)
-![ScreenShot00011](https://github.com/user-attachments/assets/1e132bfd-a9c6-47b3-be0b-1b979cc3129e)
+![ScreenShot00011](https://github.com/user-attachments/assets/d59b02d9-0d64-4da9-a82c-6f7627fc86d3)
+![ScreenShot00012](https://github.com/user-attachments/assets/d844525c-5c36-4a26-ade8-abd9be7b6ad7)
+![ScreenShot00013](https://github.com/user-attachments/assets/c3426fb3-fffc-428a-9f53-9a9ca02f8c20)
 
 

@@ -5,6 +5,7 @@
 #include "Components/Image.h"
 #include "Components/CanvasPanel.h"
 #include "Components/CanvasPanelSlot.h"
+#include "Styling/SlateColor.h"
 
 #include "MedievalDynasty/Player/InteractionMenu/MapMenu/MapMenuWidget.h"
 
@@ -33,17 +34,16 @@ void UMapWidget::UpdateWaypointsOnMap()
 		if (!IsValid(AddedWaypointImage))
 			continue;
 
-		FSlateBrush WaypointBrush = MapImage->GetBrush();
-		WaypointBrush.SetResourceObject(CurrentWaypoint.WaypointIcon);
-		AddedWaypointImage->SetBrush(WaypointBrush);
+		AddedWaypointImage->SetBrush(CurrentWaypoint.WaypointIconImageBrush);
 
 		TObjectPtr<UCanvasPanelSlot> AddedWaypointImageCanvasSlot = MapCanvasPanel->AddChildToCanvas(AddedWaypointImage);
 
 		if (!IsValid(AddedWaypointImageCanvasSlot))
 			continue;
+		
+		UpdateWaypointTransform(AddedWaypointImageCanvasSlot, CurrentWaypoint);
+		AddedWaypointImageCanvasSlot->SetAutoSize(true);
 
-		AddedWaypointImageCanvasSlot->SetPosition(FVector2D(CurrentWaypoint.WaypointWorldLocation / WorldLocationToMapDivider));
-		AddedWaypointImageCanvasSlot->SetSize(CurrentWaypoint.InitialWaypointIconSize);
 		AddedWaypointImageCanvasSlot->SetAlignment(FVector2D(0.5f));
 		AddedWaypointImageCanvasSlot->SetAnchors(FAnchors(0.5f, 0.5f));
 		AddedWaypointImageCanvasSlot->SetZOrder(1);
@@ -54,7 +54,7 @@ void UMapWidget::UpdateWaypointsOnMap()
 
 		if (CurrentWaypoint.bTrackLocation)
 		{
-			WaypointsToUpdateInRealTime.Add(AddedWaypointImageCanvasSlot, CurrentWaypoint.ActorToTrack);
+			WaypointsToUpdateInRealTime.Add(AddedWaypointImageCanvasSlot, CurrentWaypoint);
 		}
 	}
 
@@ -86,16 +86,43 @@ void UMapWidget::UpdateWaypointsInRealTime()
 		return;
 	}
 
-	for (TPair<TObjectPtr<UCanvasPanelSlot>, TObjectPtr<AActor>>& CurrentPair : WaypointsToUpdateInRealTime)
+	for (TPair<TObjectPtr<UCanvasPanelSlot>, FWaypointOnMap>& CurrentPair : WaypointsToUpdateInRealTime)
 	{
-		if (!IsValid(CurrentPair.Key) || !IsValid(CurrentPair.Value))
+		if (!IsValid(CurrentPair.Key))
 			continue;
 
-		UE_LOG(LogTemp, Warning, TEXT("vec! %s"), *FVector2D(CurrentPair.Value->GetActorLocation() / WorldLocationToMapDivider).ToString());
-
-		CurrentPair.Key->SetPosition(FVector2D(CurrentPair.Value->GetActorLocation() / WorldLocationToMapDivider));
-		CurrentPair.Key->Content->SetRenderTransformAngle(CurrentPair.Value->GetActorRotation().Yaw);
+		UpdateWaypointTransform(CurrentPair.Key, CurrentPair.Value);
 	}
+}
+
+void UMapWidget::UpdateWaypointTransform(TObjectPtr<class UCanvasPanelSlot> WaypointCanvasPanel, const FWaypointOnMap& WaypointOnMap)
+{
+	if (!IsValid(WaypointCanvasPanel))
+		return;
+
+	FTransform NewTransform = FTransform(WaypointOnMap.WaypointWorldLocation);
+	if (WaypointOnMap.bCustomTransformFunction && WaypointOnMap.GetOwnerTransform)
+	{
+		NewTransform = WaypointOnMap.GetOwnerTransform();
+	}
+	else if (IsValid(WaypointOnMap.ActorToTrack))
+	{
+		NewTransform = WaypointOnMap.ActorToTrack->GetActorTransform();
+	}
+
+	WaypointCanvasPanel->SetPosition(TransformWorldLocationToMap(NewTransform.GetLocation()));
+
+	if (WaypointOnMap.bTrackRotation)
+		WaypointCanvasPanel->Content->SetRenderTransformAngle(NewTransform.Rotator().Yaw);
+}
+
+FVector2D UMapWidget::TransformWorldLocationToMap(const FVector& VectorToTransform)
+{
+	FVector2D NewPosition = FVector2D(VectorToTransform / WorldLocationToMapDivider);
+	NewPosition.X = -NewPosition.X;
+	Swap(NewPosition.X, NewPosition.Y);
+
+	return NewPosition;
 }
 
 #pragma region ////////////// MOVE/ZOOM Map ////////////

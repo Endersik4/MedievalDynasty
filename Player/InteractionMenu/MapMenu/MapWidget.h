@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "WaypointData.h"
 #include "MapWidget.generated.h"
 
 UCLASS()
@@ -55,10 +56,12 @@ private:
 	void ScaleWaypoints(float ZoomMultiplier);
 	void DeleteWaypointsFromMap();
 	void UpdateWaypointsInRealTime();
+	void UpdateWaypointTransform(TObjectPtr<class UCanvasPanelSlot> WaypointCanvasPanel, const FWaypointOnMap& WaypointOnMap);
+	FVector2D TransformWorldLocationToMap(const FVector& VectorToTransform);
 	UPROPERTY(Transient)
 	TArray<TObjectPtr<UImage>> CurrentWaypointsOnMapImages;
 	UPROPERTY(Transient)
-	TMap<TObjectPtr<class UCanvasPanelSlot>, TObjectPtr<AActor>> WaypointsToUpdateInRealTime;
+	TMap<TObjectPtr<class UCanvasPanelSlot>, FWaypointOnMap> WaypointsToUpdateInRealTime;
 	UPROPERTY(Transient)
 	FVector2D SavedWaypointRenderScale = FVector2D(1.f);
 	UPROPERTY(Transient)

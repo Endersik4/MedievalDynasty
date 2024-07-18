@@ -12,7 +12,6 @@
 
 #include "Inventory/InventoryComponent.h"
 #include "Components/PlayerStatusComponent.h"
-#include "MedievalDynasty/Objects/Components/WaypointComponent.h"
 
 AMedievalPlayer::AMedievalPlayer()
 {
@@ -33,7 +32,6 @@ AMedievalPlayer::AMedievalPlayer()
 
 	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("Inventory Component"));
 	PlayerStatusComponent = CreateDefaultSubobject<UPlayerStatusComponent>(TEXT("Player Status Component"));
-	WaypointComponent = CreateDefaultSubobject<UWaypointComponent>(TEXT("Waypoint Component"));
 
 	bReplicates = true;
 	SetReplicateMovement(true);
@@ -44,6 +42,14 @@ void AMedievalPlayer::BeginPlay()
 	Super::BeginPlay();
 	
 	PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+
+	PlayerWaypoint.GetOwnerTransform = [this]() {return this->GetPlayerTransform(); };
+	AddWaypoint(PlayerWaypoint);
+}
+
+FTransform AMedievalPlayer::GetPlayerTransform()
+{
+	return FTransform(PlayerSkeletalMesh->GetComponentRotation(), GetActorLocation());
 }
 
 void AMedievalPlayer::Tick(float DeltaTime)
@@ -65,6 +71,7 @@ void AMedievalPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 	PlayerInputComponent->BindAction<FSelectSubInteractionMenu>(FName(TEXT("OpenInventory")), IE_Pressed, InventoryComponent.Get(), &UInventoryComponent::OpenInteractionMenu, 0);
 	PlayerInputComponent->BindAction<FSelectSubInteractionMenu>(FName(TEXT("OpenSkills")), IE_Pressed, InventoryComponent.Get(), &UInventoryComponent::OpenInteractionMenu, 1);
+	PlayerInputComponent->BindAction<FSelectSubInteractionMenu>(FName(TEXT("OpenMap")), IE_Pressed, InventoryComponent.Get(), &UInventoryComponent::OpenInteractionMenu, 3);
 }
 
 void AMedievalPlayer::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

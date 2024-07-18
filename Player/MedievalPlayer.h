@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "InteractionMenu/MapMenu/WaypointData.h"
-
 #include "MedievalPlayer.generated.h"
 
 UCLASS()
@@ -40,6 +39,8 @@ public:
 	FORCEINLINE const TArray<FWaypoint>& GetAllWaypoints() const {return AllWaypoints;}
 	FORCEINLINE const TObjectPtr<UDataTable> GetWaypointsDataTable() const {return WaypointsDataTable;}
 
+	FTransform GetPlayerTransform();
+
 protected:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
@@ -67,8 +68,6 @@ private:
 	TObjectPtr<class UInventoryComponent> InventoryComponent = nullptr;
 	UPROPERTY(EditDefaultsOnly, Category = "Components")
 	TObjectPtr<class UPlayerStatusComponent> PlayerStatusComponent = nullptr;
-	UPROPERTY(EditDefaultsOnly, Category = "Components")
-	TObjectPtr<class UWaypointComponent> WaypointComponent = nullptr;
 
 	UPROPERTY(EditAnywhere, Category = "Player Settings")
 	FString PlayersName = FString("Endersik");
@@ -87,6 +86,8 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Player Settings|Camera Settings")
 	FFloatRange LimitPitchRotation = FFloatRange(-30.f, 30.f);
 
+	UPROPERTY(EditDefaultsOnly, Category = "Waypoints")
+	FWaypoint PlayerWaypoint;
 	UPROPERTY(EditDefaultsOnly, Category = "Waypoints")
 	TObjectPtr<UDataTable> WaypointsDataTable = nullptr;
 	UPROPERTY(EditDefaultsOnly, Category = "Waypoints")

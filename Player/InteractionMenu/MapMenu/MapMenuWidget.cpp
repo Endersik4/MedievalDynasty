@@ -36,14 +36,18 @@ void UMapMenuWidget::UpdateWaypoints()
 			continue;
 
 		FWaypointOnMap TempWaypoint = *WaypointOnMap;
-		TempWaypoint.bTrackLocation = CurrentWaypoint.bTrackLocation;
-		TempWaypoint.ActorToTrack = CurrentWaypoint.ActorToTrack;
+		TempWaypoint = CurrentWaypoint;
 
-		if (!WaypointOnMap->bIgnoreCategory)
+		if (!WaypointOnMap->bIgnoreCategory && !WaypointOnMap->bVisibiltyNotAffectedByCategory)
 		{
 			const int32 FoundWaypointIndexInCategory = WaypointOnMap->CategoriesForWaypoint.Find(SortedWaypointsToCategory[CurrentWaypointsOnMapIndex].WaypointCategoryType);
 			if (FoundWaypointIndexInCategory == INDEX_NONE)
 				continue;
+		}
+
+		if (SortedWaypointsToCategory[CurrentWaypointsOnMapIndex].AllSortedWaypoints.FindByKey(TempWaypoint))
+		{
+			TempWaypoint.bIgnoreCategory = true;
 		}
 		
 		SortedWaypointsToCategory[CurrentWaypointsOnMapIndex].AllSortedWaypoints.Add(TempWaypoint);

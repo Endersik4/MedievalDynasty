@@ -22,6 +22,9 @@ void UWaypointComponent::BeginPlay()
 	if (!IsValid(Player))
 		return;
 
+	if (Waypoint.WaypointWorldLocation == FVector(0.f))
+		Waypoint.WaypointWorldLocation = GetOwner()->GetActorLocation();
+
 	if (Waypoint.bTrackLocation && !IsValid(Waypoint.ActorToTrack))
 	{
 		Waypoint.ActorToTrack = GetOwner();

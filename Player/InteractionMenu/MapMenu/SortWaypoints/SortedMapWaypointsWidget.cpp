@@ -69,7 +69,7 @@ void USortedMapWaypointsWidget::FillSortedWaypointsListView()
 
 	if (CurrentWaypointsOnMapIndex >= SortedWaypointsToCategory.Num() || CurrentWaypointsOnMapIndex < 0)
 		return;
-
+	
 	SortDisplayNameTextBlock->SetText(SortedWaypointsToCategory[CurrentWaypointsOnMapIndex].WaypointSortDisplayName);
 
 	for (const FWaypointOnMap& CurrentWaypoint : SortedWaypointsToCategory[CurrentWaypointsOnMapIndex].AllSortedWaypoints)
@@ -77,13 +77,20 @@ void USortedMapWaypointsWidget::FillSortedWaypointsListView()
 		if (CurrentWaypoint.bIgnoreCategory)
 			continue;
 
+		if (CurrentWaypoint.bVisibiltyNotAffectedByCategory)
+		{
+			if (CurrentWaypoint.CategoriesForWaypoint.Find(SortedWaypointsToCategory[CurrentWaypointsOnMapIndex].WaypointCategoryType) == INDEX_NONE)
+				continue;
+		}
+
 		TObjectPtr<USortWaypointEntryObject> SortWaypointEntryObject = NewObject<USortWaypointEntryObject>();
 		if (!IsValid(SortWaypointEntryObject))
 			return;
 
 		SortWaypointEntryObject->WaypointDisplayText = CurrentWaypoint.WaypointDisplayName;
-		SortWaypointEntryObject->WaypointIcon = CurrentWaypoint.WaypointIcon;
-
+		TObjectPtr<UTexture2D> test = Cast<UTexture2D>(CurrentWaypoint.WaypointIconImageBrush.GetResourceObject());
+		SortWaypointEntryObject->WaypointIcon = CurrentWaypoint.bDifferentWaypointIcon ? CurrentWaypoint.WaypointCategoryIcon : test;
+		
 		SortedWaypointsListView->AddItem(SortWaypointEntryObject);
 	}
 }

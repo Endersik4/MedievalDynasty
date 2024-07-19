@@ -27,7 +27,8 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	FORCEINLINE void AddWaypoint(FWaypoint NewWaypoint) { AllWaypoints.Add(NewWaypoint); }
+	FORCEINLINE void AddWaypoint(const FWaypoint& NewWaypoint) { AllWaypoints.Add(NewWaypoint); };
+	void AddPlayerWaypointToOtherPlayers(bool bAddPlacedWaypoint = false);
 
 	FORCEINLINE FString GetPlayersName() const { return PlayersName; }
 	FORCEINLINE int32 GetPlayersAge() const { return PlayersAge; }
@@ -86,8 +87,14 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Player Settings|Camera Settings")
 	FFloatRange LimitPitchRotation = FFloatRange(-30.f, 30.f);
 
-	UPROPERTY(EditDefaultsOnly, Category = "Waypoints")
+	UPROPERTY(EditDefaultsOnly, Category = "Waypoints|Player")
 	FWaypoint PlayerWaypoint;
+	UPROPERTY(EditDefaultsOnly, Category = "Waypoints|Player")
+	FWaypoint OtherPlayerWaypoint;
+	UPROPERTY(EditDefaultsOnly, Category = "Waypoints|Player")
+	FWaypoint PlacedWaypoint;
+	UPROPERTY(EditDefaultsOnly, Category = "Waypoints|Player")
+	FWaypoint OtherPlayerPlacedWaypoint;
 	UPROPERTY(EditDefaultsOnly, Category = "Waypoints")
 	TObjectPtr<UDataTable> WaypointsDataTable = nullptr;
 	UPROPERTY(EditDefaultsOnly, Category = "Waypoints")

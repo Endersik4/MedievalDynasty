@@ -1,5 +1,4 @@
-// Copyright Adam Bartela. All Rights Reserved
+﻿// Copyright Adam Bartela. All Rights Reserved
 
 
 #include "MedievalDynasty/Framework/MedievalGameMode.h"
-

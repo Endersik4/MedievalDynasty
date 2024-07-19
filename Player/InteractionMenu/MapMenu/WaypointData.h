@@ -85,7 +85,7 @@ struct FWaypointOnMap : public FTableRowBase, public FWaypoint
 	UPROPERTY(EditAnywhere, meta = (EditCondition = "!bIgnoreCategory"))
 	TArray<TEnumAsByte<EWaypointSortCategory>> CategoriesForWaypoint;
 	
-	FWaypointOnMap()
+	FWaypointOnMap()	
 	{
 		WaypointDisplayName = FText();
 		WaypointIconImageBrush = FSlateBrush();

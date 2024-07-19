@@ -12,6 +12,7 @@
 
 #include "Inventory/InventoryComponent.h"
 #include "Components/PlayerStatusComponent.h"
+#include "MedievalDynasty/Framework/MedievalGameInstance.h"
 
 AMedievalPlayer::AMedievalPlayer()
 {
@@ -45,11 +46,35 @@ void AMedievalPlayer::BeginPlay()
 
 	PlayerWaypoint.GetOwnerTransform = [this]() {return this->GetPlayerTransform(); };
 	AddWaypoint(PlayerWaypoint);
+
+	AddPlayerWaypointToOtherPlayers();
 }
 
-FTransform AMedievalPlayer::GetPlayerTransform()
+void AMedievalPlayer::AddPlayerWaypointToOtherPlayers(bool bAddPlacedWaypoint)
 {
-	return FTransform(PlayerSkeletalMesh->GetComponentRotation(), GetActorLocation());
+	TArray<AActor*> AllPlayers;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AMedievalPlayer::StaticClass(), AllPlayers);
+
+	for (TObjectPtr<AActor> CurrentActor : AllPlayers)
+	{
+		TObjectPtr<AMedievalPlayer> OtherPlayer = Cast<AMedievalPlayer>(CurrentActor);
+		if (!IsValid(OtherPlayer))
+			continue;
+		if (OtherPlayer == this)
+			continue;
+
+		FWaypoint TempWaypoint = bAddPlacedWaypoint ? OtherPlayerPlacedWaypoint : OtherPlayerWaypoint;
+
+		if (!bAddPlacedWaypoint)
+			TempWaypoint.GetOwnerTransform = [this]() {return this->GetPlayerTransform(); };
+
+		OtherPlayer->AddWaypoint(TempWaypoint);
+
+		if (!bAddPlacedWaypoint)
+			TempWaypoint.GetOwnerTransform = [OtherPlayer]() {return OtherPlayer->GetPlayerTransform(); };
+
+		AddWaypoint(TempWaypoint);
+	}
 }
 
 void AMedievalPlayer::Tick(float DeltaTime)
@@ -219,3 +244,8 @@ void AMedievalPlayer::ServerSetPlayerRotation_Implementation(FRotator NewRotatio
 	SetPlayerRotation(NewRotation);
 }
 #pragma endregion
+
+FTransform AMedievalPlayer::GetPlayerTransform()
+{
+	return FTransform(PlayerSkeletalMesh->GetComponentRotation(), GetActorLocation());
+}

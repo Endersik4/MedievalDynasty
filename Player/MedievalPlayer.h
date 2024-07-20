@@ -42,6 +42,9 @@ public:
 
 	FTransform GetPlayerTransform();
 
+	UFUNCTION(Server, Reliable)
+	void ServerSpawnActor(TSubclassOf<class APickableItem> PickableItemClass, FTransform Transfrrom);
+
 protected:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 

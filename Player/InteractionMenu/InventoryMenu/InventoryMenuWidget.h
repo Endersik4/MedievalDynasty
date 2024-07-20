@@ -91,9 +91,7 @@ protected:
 	TObjectPtr<UImage> RightCategoryDecorationImage = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
-	TObjectPtr<URichTextBlock> WeightInformationRichTextBlock = nullptr;
-	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
-	TObjectPtr<URichTextBlock> MoneyInformationRichTextBlock = nullptr;
+	TObjectPtr<UButton> DropItemButton = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
 	TObjectPtr<class UDetailedItemInfoWidget> DetailedItemInfoWidget = nullptr;
@@ -106,6 +104,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
 	TObjectPtr<class UDragItemWidget> DraggingItemWidget = nullptr;
+
+	UFUNCTION()
+	void OnHovered_DropItemButton();
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Inventory Settings")

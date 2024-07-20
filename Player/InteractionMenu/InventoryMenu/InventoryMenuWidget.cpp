@@ -11,6 +11,7 @@
 
 #include "MedievalDynasty/Player//Inventory/InventoryComponent.h"
 #include "MedievalDynasty/Player/MedievalPlayer.h"
+#include "MedievalDynasty/Player/Inventory/PickableItem.h"
 #include "MedievalDynasty/Player/Components/PlayerStatusComponent.h"
 #include "SelectCategory/SelectCategoryEntryObject.h"
 #include "ShowItems/ShowItemDataObject.h"
@@ -22,6 +23,8 @@
 void UInventoryMenuWidget::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
+
+	DropItemButton->OnHovered.AddDynamic(this, &UInventoryMenuWidget::OnHovered_DropItemButton);
 
 	Player = Cast<AMedievalPlayer>(GetOwningPlayerPawn());
 	if (IsValid(Player))
@@ -43,6 +46,7 @@ void UInventoryMenuWidget::NativeOnInitialized()
 		StatusAndEquipmentWidget->FillWeaponShortcutsTileView();
 		StatusAndEquipmentWidget->FillEquipmentTileView();
 	}
+
 }
 
 #pragma region //////// CATEGORY /////////////
@@ -136,6 +140,33 @@ void UInventoryMenuWidget::SortItemsByNameDescending()
 
 	SortItemsWidget->SortItems(SortNameLambda);
 }
+
+void UInventoryMenuWidget::OnHovered_DropItemButton()
+{
+	if (!IsValid(DraggingItemWidget))
+		return;
+
+	if (!DraggingItemWidget->GetIsDraggingItem())
+		return;
+
+	if (!IsValid(Player))
+		return;
+
+	FBaseItemData CurrentDraggingItem = DraggingItemWidget->GetCurrentDragingItem();
+
+	if (!IsValid(CurrentDraggingItem.PickableItemClass))
+		return;
+
+	if (Player->GetLocalRole() == ENetRole::ROLE_Authority)
+	{
+		GetWorld()->SpawnActor<APickableItem>(CurrentDraggingItem.PickableItemClass, Player->GetActorTransform());
+	}
+	else
+	{
+		Player->ServerSpawnActor(CurrentDraggingItem.PickableItemClass, Player->GetActorTransform());
+	}
+}
+
 #pragma endregion
 
 #pragma region ///////// PLAYER STATUS /////////

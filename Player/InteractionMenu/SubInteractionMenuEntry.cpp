@@ -35,6 +35,13 @@ void USubInteractionMenuEntry::NativeOnListItemObjectSet(UObject* ListItemObject
 		OnClicked_SubInteractionButton();
 }
 
+FReply USubInteractionMenuEntry::NativeOnFocusReceived(const FGeometry& MyGeometry, const FFocusEvent& InFocusEvent)
+{
+	OnClicked_SubInteractionButton();
+
+	return FReply::Handled();
+}
+
 void USubInteractionMenuEntry::OnClicked_SubInteractionButton()
 {
 	if (!IsValid(SubInteractionMenuObject))
@@ -46,6 +53,8 @@ void USubInteractionMenuEntry::OnClicked_SubInteractionButton()
 	SubInteractionMenuObject->InteractionMenuWidget->SpawnNewSubInteractionWidget(SubInteractionMenuObject->SubInteractionMenuType.SubInteractionMenuWidget);
 	SubInteractionMenuObject->InteractionMenuWidget->SubInteractionMenuDisabledFunc = [this](bool bActivate) {this->ActivateSubInteractionMenu(bActivate);};
 	
+	SetFocus();
+
 	ActivateSubInteractionMenu();
 }
 

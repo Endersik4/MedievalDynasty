@@ -13,6 +13,7 @@
 #include "Inventory/InventoryComponent.h"
 #include "Components/PlayerStatusComponent.h"
 #include "MedievalDynasty/Framework/MedievalGameInstance.h"
+#include "MedievalDynasty/Player/Inventory/PickableItem.h"
 
 AMedievalPlayer::AMedievalPlayer()
 {
@@ -244,6 +245,11 @@ void AMedievalPlayer::ServerSetPlayerRotation_Implementation(FRotator NewRotatio
 	SetPlayerRotation(NewRotation);
 }
 #pragma endregion
+
+void AMedievalPlayer::ServerSpawnActor_Implementation(TSubclassOf<APickableItem> PickableItemClass, FTransform Transfrrom)
+{
+	GetWorld()->SpawnActor<APickableItem>(PickableItemClass, Transfrrom);
+}
 
 FTransform AMedievalPlayer::GetPlayerTransform()
 {

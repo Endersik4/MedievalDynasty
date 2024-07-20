@@ -21,6 +21,7 @@ public:
 protected:
 	virtual void NativeOnInitialized() override;
 	virtual void NativeOnListItemObjectSet(UObject* ListItemObject) override;
+	virtual FReply NativeOnFocusReceived(const FGeometry& MyGeometry, const FFocusEvent& InFocusEvent) override;
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
 	TObjectPtr<class UButton> SubInteractionButton = nullptr;

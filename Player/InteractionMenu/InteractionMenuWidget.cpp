@@ -3,6 +3,7 @@
 
 #include "MedievalDynasty/Player/InteractionMenu/InteractionMenuWidget.h"
 #include "Components/TileView.h"
+#include "GameFramework/InputSettings.h"
 
 #include "SubInteractionMenuObject.h"
 
@@ -14,12 +15,19 @@ void UInteractionMenuWidget::NativeOnInitialized()
 
 void UInteractionMenuWidget::OpenSubInteractionMenuAccordingToID(int32 MenuIDToInitiallyOpen)
 {
+	if (MenuIDToInitiallyOpen < 0)
+	{
+		MenuIDToInitiallyOpen = AllSubInteractionsMenu.Num() - 1;
+	}
+
 	InitialSubInteractionMenuID = MenuIDToInitiallyOpen;
 	FillSubInteractionsTileView();
 }
 
 void UInteractionMenuWidget::FillSubInteractionsTileView()
 {
+	SubInteractionsMenuTileView->ClearListItems();
+
 	for (const FSubInteractionMenuType& CurrentSubMenuType : AllSubInteractionsMenu)
 	{
 		TObjectPtr<USubInteractionMenuObject> SpawnedTileViewObject = NewObject<USubInteractionMenuObject>();
